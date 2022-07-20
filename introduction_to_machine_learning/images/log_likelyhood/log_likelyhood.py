@@ -3,7 +3,9 @@ from mpl_toolkits import mplot3d
 import matplotlib
 import matplotlib.pyplot as plt
 import IPython
+import pathlib
 
+path = pathlib.Path(__file__).parent
 mu, sigma = 1.52, 0.1
 observations = np.random.normal(mu, sigma, (10000))
 MU, SIGMA = np.meshgrid(np.linspace(mu-0.1*mu, mu+0.1*mu, 100), np.logspace(np.log10(sigma-0.5*sigma), np.log10(sigma+2*sigma), 100))
@@ -23,26 +25,26 @@ def log_likelyhood(mu: np.ndarray, sigma: np.ndarray, observations: np.ndarray) 
 
 LL = log_likelyhood(MU, SIGMA, observations)
 
-LL -= LL.min() - 1.0E-9
+# LL -= LL.min() - 1.0E-9
 
 # plot likelyhood
-fig = plt.figure()
-ax = plt.axes(projection='3d')
+fig = plt.figure(figsize=[9, 4])
+ax = fig.add_subplot(121, projection="3d")
 ax.plot_surface(MU, SIGMA, LL, rstride=1, cstride=1, cmap='viridis', edgecolor='none')
-ax.set_xlabel("$\mu$", fontsize=20)
-ax.set_ylabel("$\sigma$", fontsize=20)
-ax.set_zlabel("log vraisemblance", fontsize=20)
+ax.set_xlabel("$\mu$")
+ax.set_ylabel("$\sigma$")
+ax.set_zlabel("log likelyhood")
 ax.set_zticks([])
 
 # plot histogram
-f, ax = plt.subplots()
+ax = fig.add_subplot(122)
 ax.hist(observations, bins=30, density=True)
 x = np.linspace(observations.min(), observations.max(), 1000)
 y = normal(x, mu, sigma)
 ax.plot(x, y, linewidth=2.)
-ax.set_xlabel("Prix de l'essence (€/L)")
 ax.set_yticks([])
 
+fig.savefig(path / "log_likelyhood.png", transparent=True)
 plt.show()
 
 IPython.embed()
