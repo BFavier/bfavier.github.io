@@ -2,6 +2,4 @@
 
 [introduction to machine learning](introduction_to_machine_learning/introduction_to_machine_learning.md)
 
-$$
-\LaTeX
-$$
+$\LaTeX$
