@@ -28,7 +28,7 @@ for i, ax in enumerate((ax1, ax2, ax3)):
     ax.set_title(["linéaire", "polynôme du 2nd degrès", "polynôme avec intéractions"][i])
 
 # fig.tight_layout()
-plt.savefig(path / "images" / "linear_regression.png")
+plt.savefig(path / "linear_regression.png")
 plt.show()
 
 IPython.embed()

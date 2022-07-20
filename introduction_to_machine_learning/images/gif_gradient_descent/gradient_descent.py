@@ -115,12 +115,12 @@ L = np.array([loss(model(X, P), Ytarget) for P in np.stack([A.reshape(-1), B.res
 f, ax1, ax2 = create_axes()
 draw_observations(0, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=False)
 # f.tight_layout()
-f.savefig(path / "images" / "gif_gradient_descent" / f"gradient0.png")
+f.savefig(path / "gradient0.png")
 plt.close(f)
 
 files = []
 for step in range(1, 100):
-    file_name = path / "images" / "gif_gradient_descent" / f"gradient{step}.png"
+    file_name = path / f"gradient{step}.png"
     f, ax1, ax2 = create_axes()
     draw_observations(step, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2)
     # f.tight_layout()
@@ -131,8 +131,8 @@ for step in range(1, 100):
 
 # IPython.embed()
 
-with imageio.get_writer(path / "images" / "gradient.gif", mode='I', fps=10) as writer:
-    base = imageio.imread(path / "images" / "gif_gradient_descent" / f"gradient0.png")
+with imageio.get_writer(path / "gradient.gif", mode='I', fps=10) as writer:
+    base = imageio.imread(path / "gradient0.png")
     for i in range(10):
         writer.append_data(base)
     for filename in files:

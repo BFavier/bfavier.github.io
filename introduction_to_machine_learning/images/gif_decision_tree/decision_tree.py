@@ -156,7 +156,7 @@ ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.yaxis.set_label_position("right")
 ax.set_aspect("equal")
-f.savefig(path / "images" / "gif_decision_tree" / "tree.png")
+f.savefig(path / "tree.png")
 
 files = []
 for i in range(20):
@@ -198,7 +198,7 @@ for i in range(20):
     ax.yaxis.set_label_position("right")
 
     # step
-    file_name = path / "images" / "gif_decision_tree" / f"tree{i}.png"
+    file_name = path / f"tree{i}.png"
     files.append(file_name)
     f.savefig(file_name)
     print(file_name)
@@ -209,9 +209,9 @@ for i in range(20):
 
 # IPython.embed()
 
-with imageio.get_writer(path / "images" / "decision_tree.gif", mode='I', fps=2) as writer:
+with imageio.get_writer(path / "decision_tree.gif", mode='I', fps=2) as writer:
     for i in range(2):
-        image = imageio.imread(path / "images" / "gif_decision_tree" / f"tree.png")
+        image = imageio.imread(path / f"tree.png")
         writer.append_data(image)
     for filename in files:
         image = imageio.imread(filename)

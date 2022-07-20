@@ -67,7 +67,7 @@ ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.yaxis.set_label_position("right")
 
-f.savefig(path / "images" / "k_nearest.png")
+f.savefig(path / "k_nearest.png")
 
 plt.show()
 

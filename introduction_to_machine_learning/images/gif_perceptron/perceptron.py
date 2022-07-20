@@ -24,7 +24,7 @@ for i, theta in enumerate(np.linspace(0, 2*np.pi, 100)):
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_zticks([])
-    file_name = path / "images" / "gif_perceptron" / f"preceptron{i}.png"
+    file_name = path / f"preceptron{i}.png"
     files.append(file_name)
     f.tight_layout()
     f.savefig(file_name)
@@ -32,7 +32,7 @@ for i, theta in enumerate(np.linspace(0, 2*np.pi, 100)):
     print(file_name)
 
 
-with imageio.get_writer(path / "images" / "perceptron.gif", mode='I', fps=24) as writer:
+with imageio.get_writer(path / "perceptron.gif", mode='I', fps=24) as writer:
     for filename in files:
         image = imageio.imread(filename)
         writer.append_data(image)

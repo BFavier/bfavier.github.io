@@ -12,12 +12,6 @@ plt.style.use("bmh")
 path = pathlib.Path(__file__).parent
 
 
-# def target(X):
-#     return 100*(np.exp(-0.5*(np.where((X - 13) > 0, (X-13)/1., (X-13)/0.5))**2)
-#                 + 0.6*np.exp(-0.5*((X-8)/1)**2) + 0.4*np.exp(-0.5*((X-18)/5)**2)
-#                 ) + 30
-
-
 def target(X):
     return 3*X + 30 + np.random.normal(0, 10, size=X.shape)
 
@@ -83,13 +77,13 @@ for n, w in enumerate(weights):
     axes[1].set_xticklabels([f"{tick}" for tick in xticks])
     axes[1].yaxis.set_label_position("right")
 
-    file_name = path / "images" / "gif_polynoms" / f"poly{n}.png"
+    file_name = path / f"poly{n}.png"
     files.append(file_name)
     f.savefig(file_name)
     print(file_name)
     plt.close(f)
 
-with imageio.get_writer(path / "images" / "polynoms.gif", mode='I', fps=2) as writer:
+with imageio.get_writer(path / "polynoms.gif", mode='I', fps=2) as writer:
     for filename in files:
         image = imageio.imread(filename)
         writer.append_data(image)

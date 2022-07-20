@@ -145,12 +145,12 @@ draw_observations(ax)
 ax.set_title(f"step 0:")
 ax.set_zlim([Ytarget.min(), Ytarget.max()])
 f.tight_layout()
-f.savefig(path / "images" / "gif_genetic" / f"genetic0.png")
+f.savefig(path / "genetic0.png")
 plt.close(f)
 
 files = []
 for step in range(100):
-    file_name = path / "images" / "gif_genetic" / f"genetic{step+1}.png"
+    file_name = path / f"genetic{step+1}.png"
     f, ax = create_axes()
     draw_observations(ax)
     Ypred = model(Xgrid, P0)
@@ -169,8 +169,8 @@ for step in range(100):
 # IPython.embed()
 
 
-with imageio.get_writer(path / "images" / "genetic.gif", mode='I', fps=10) as writer:
-    base = imageio.imread(path / "images" / "gif_genetic" / f"genetic0.png")
+with imageio.get_writer(path / "genetic_algorithm.gif", mode='I', fps=10) as writer:
+    base = imageio.imread(path / f"genetic0.png")
     for i in range(10):
         writer.append_data(base)
     for filename in files:
