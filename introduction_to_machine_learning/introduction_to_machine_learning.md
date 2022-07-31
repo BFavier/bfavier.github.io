@@ -52,13 +52,16 @@ Optimization algorithms aim at finding efficiently a minimum (often a local one)
 
 ### Gradient descent algorithm
 
-The most commonly used optimization algorithm is the gradient descent algorithm. The loss as a function of other parameters can be seen as an hyper-surface we want to find the minimum of. The idea of the gradient descent is to start from an initial position of random parameters, and follow the slope of the cost function toward a local minimum.
+The most commonly used optimization algorithm is the gradient descent algorithm (Augustin-Louis Cauchy 1847). The loss as a function of other parameters can be seen as an hyper-surface we want to find the minimum of. The idea of the gradient descent is to start from an initial position of random parameters, and follow the slope of the cost function toward a local minimum.
 
-The gradient is the vector of derivatives of the loss function with regards to eahc of the model's parameters. It points in the uphill direction, so we make small displacements in the parameters space, in the direction opposed to the gradient. The value of the gradient is to be recomputed each time.
+The gradient is the vector of derivatives of the loss function with regards to eahc of the model's parameters. It points in the uphill direction, so we make small displacements in the parameters space, in the direction opposed to the gradient. The value of the gradient is to be updated at each step. Idealy an analytical expression of the gradient should be used, otherwise it can be approximated numerically.
+
+In the next figure we fit a linear function y=a*x+b to some data points. In the upper panel we represent the data points in blue, the fitted curve in purple, and the deviation between observation and prediction in red. The loss to minimize is the sum of the square length of the red segments.
 
 ![gradient_descent](images/gif_gradient_descent/gradient_descent.gif)
 
-The gradient should ideally be an analytical function, and otherwise can be approximated numerically.
-
 ### Genetic algorithm
 
+Another less often used optimization algorithm is the genetic algorithm optimization (John Holland 1960). It is inspired for the theory of evolution. The vector of all the parameters of the model is assimilated to the genetic coe of an individual. The criterion to optimize for is
+a fitness score that we want to maximize.
+![genetic_algorithm](images/gif_genetic/genetic_algorithm.gif)
