@@ -2,9 +2,10 @@ import numpy as np
 from mpl_toolkits import mplot3d
 import matplotlib
 import matplotlib.pyplot as plt
-import imageio
+import PIL
 import pathlib
 import IPython
+import os
 
 path = pathlib.Path(__file__).parent
 
@@ -145,7 +146,7 @@ draw_observations(ax)
 ax.set_title(f"step 0:")
 ax.set_zlim([Ytarget.min(), Ytarget.max()])
 f.tight_layout()
-f.savefig(path / "genetic0.png")
+f.savefig(path / "genetic0.png", transparent=True, dpi=300)
 plt.close(f)
 
 files = []
@@ -155,13 +156,13 @@ for step in range(100):
     draw_observations(ax)
     Ypred = model(Xgrid, P0)
     l = loss(model(Xobs, P0), Ytarget)[0]
-    ax.plot_surface(Xgrid[0], Xgrid[1], Ypred[0],
-                    rstride=1, cstride=1, cmap="inferno", vmin=Ytarget.min(), vmax=Ytarget.max())
+    ax.plot_wireframe(Xgrid[0], Xgrid[1], Ypred[0],
+                    rstride=1, cstride=1, cmap="inferno")
     params = ", ".join(f"{p:.3g}" for p in P0[0])
     ax.set_title(f"step {step+1}: loss={l:.3g}, (a, b, c, d, e, f)=({params})")
     ax.set_zlim([Ytarget.min(), Ytarget.max()])
     f.tight_layout()
-    f.savefig(file_name)
+    f.savefig(file_name, transparent=True, dpi=300)
     print(file_name)
     files.append(file_name)
     plt.close(f)
@@ -169,10 +170,18 @@ for step in range(100):
 # IPython.embed()
 
 
-with imageio.get_writer(path / "genetic_algorithm.gif", mode='I', fps=10) as writer:
-    base = imageio.imread(path / f"genetic0.png")
-    for i in range(10):
-        writer.append_data(base)
-    for filename in files:
-        image = imageio.imread(filename)
-        writer.append_data(image)
+# with imageio.get_writer(path / "genetic_algorithm.gif", mode='I', fps=10) as writer:
+#     base = imageio.imread(path / f"genetic0.png")
+#     for i in range(10):
+#         writer.append_data(base)
+#     for filename in files:
+#         image = imageio.imread(filename)
+#         writer.append_data(image)
+
+image = PIL.Image.open(path / f"genetic0.png").convert('P')
+images = [image] * 9 + [PIL.Image.open(file).convert('P') for file in files]
+image.save(path / 'genetic_algorithm.gif', save_all=True, append_images=images, loop=0, duration=10, transparency=0, disposal=2)
+
+os.remove(path / f"genetic0.png")
+for file in files:
+    os.remove(file)

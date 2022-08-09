@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pathlib
 import PIL
+import os
 
 path = pathlib.Path(__file__).parent
 
@@ -38,7 +39,7 @@ for i in range(N):
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     ax.set_xlim([-0.8, 0.])
-    ax.set_ylim([0., 0.6])
+    ax.set_ylim([0., 0.5])
     ax.set_aspect("equal")
     # f.tight_layout()
     file_name = path / f"trajectory{i}.png"
@@ -53,4 +54,6 @@ for i in range(N):
 
 image = PIL.Image.open(files[0]).convert('P')
 images = [PIL.Image.open(file).convert('P') for file in files[1:]]
-image.save(path / 'trajectory.gif', save_all=True, append_images=images, loop=0, duration=3, transparency=0)
+image.save(path / "trajectory.gif", save_all=True, append_images=images, loop=0, duration=3, transparency=0)
+for file in files:
+    os.remove(file)

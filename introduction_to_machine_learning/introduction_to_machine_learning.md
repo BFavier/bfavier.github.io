@@ -38,12 +38,6 @@ Under the heavy influence of it later use in economics, this function that we wa
 ![cost_function_minimization](images/cost_function_minimization.png)
 
 
-Statisticians are also using this idea to estimate the parameters of their probability distributions, when they are non trivial. This is why parametric models fitted with this kind of methods used to be called statistical models before the appartition of the word "machine learning model", even if they were not probability distributions. The criterion statisticians want to maximize is the likelyhood of obtaining the observed set of values. In this context, the method is called maximum of likelyhood. Because maximizing a function or the log of a function is the same, numerically the function they want to maximize is the sum of log likelyhood of all observed events.
-
-
-![log_likelyhood](images/log_likelyhood/log_likelyhood.png)
-
-
 Ideally this loss function has a single minimum, and an analytical derivative with regards to each of the parameters, for which we can solve for the zero. In these cases we can obtain an analytical solution of the parameters that minimize the loss. Notably, this is the case for linear model least squares regressions. However in most practical cases this is not true.
 
 ## Numerical optimization

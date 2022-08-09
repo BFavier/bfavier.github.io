@@ -5,8 +5,9 @@ from mpl_toolkits import mplot3d
 from matplotlib.ticker import FormatStrFormatter
 import matplotlib
 import matplotlib.pyplot as plt
-import imageio
+import PIL
 import pathlib
+import os
 import IPython
 
 # plt.style.use("bmh")
@@ -79,16 +80,16 @@ for epoch in range(100):
 Ps = np.stack(Ps)
 
 def create_axes():
-    fig = plt.figure(figsize=[5, 8])
-    ax1 = fig.add_subplot(211)
-    ax2 = fig.add_subplot(212, projection='3d')
+    fig = plt.figure(figsize=[10, 5])
+    ax1 = fig.add_subplot(121)
+    ax2 = fig.add_subplot(122, projection='3d')
     return fig, ax1, ax2
 
 def draw_observations(i, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=True):
     Ypred = model(X, Ps[i])
     ax1.scatter(X, Ytarget, color="C0", marker=".", label="observations")
     if draw_model:
-        ax1.plot(X, Ypred, color="#900090", label="model")
+        ax1.plot(X, Ypred, color="g", label="model")
         ax1.vlines(X, np.minimum(Ypred, Ytarget), np.maximum(Ypred, Ytarget), color="r", linewidths=0.3)
     ax1.set_ylim([0, 1.1*Ytarget.max()])
     ax2.plot_wireframe(A, B, L, rstride=1, cstride=1, color="g", zorder=0)
@@ -99,23 +100,20 @@ def draw_observations(i, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=True)
     ax2.set_zlabel("loss")
     ax2.set_zticks([])
     ax1.set_title(f"step {i}:")
-    ticks = range(7, 21, 2)
-    ax1.set_xticks(ticks)
-    ax1.set_xticklabels([f"{i}h" for i in ticks])
-    ax1.set_xlabel("heure de publication")
-    ax1.set_ylabel("nombre de likes en 24h")
+    ax1.set_xlabel("x")
+    ax1.set_ylabel("y")
 
 # inf, sup = Ps.min(axis=0), Ps.max(axis=0)
 Ra, Rb = np.abs(Ps - Ps[-1:]).max(axis=0)
 a_bounds = (Ps[-1][0] - Ra, Ps[-1][0] + Ra)
 b_bounds = (Ps[-1][1] - Rb, Ps[-1][1] + Rb)
-A, B = np.meshgrid(np.linspace(a_bounds[0], a_bounds[1], 10), np.linspace(b_bounds[0], b_bounds[1], 10))
+A, B = np.meshgrid(np.linspace(a_bounds[0], a_bounds[1], 100), np.linspace(b_bounds[0], b_bounds[1], 100))
 L = np.array([loss(model(X, P), Ytarget) for P in np.stack([A.reshape(-1), B.reshape(-1)], axis=1)]).reshape(A.shape)
 
 f, ax1, ax2 = create_axes()
 draw_observations(0, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=False)
 # f.tight_layout()
-f.savefig(path / "gradient0.png")
+f.savefig(path / "gradient0.png", transparent=True, dpi=300)
 plt.close(f)
 
 files = []
@@ -124,17 +122,25 @@ for step in range(1, 100):
     f, ax1, ax2 = create_axes()
     draw_observations(step, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2)
     # f.tight_layout()
-    f.savefig(file_name)
+    f.savefig(file_name, transparent=True, dpi=300)
     print(file_name)
     files.append(file_name)
     plt.close(f)
 
 # IPython.embed()
 
-with imageio.get_writer(path / "gradient.gif", mode='I', fps=10) as writer:
-    base = imageio.imread(path / "gradient0.png")
-    for i in range(10):
-        writer.append_data(base)
-    for filename in files:
-        image = imageio.imread(filename)
-        writer.append_data(image)
+# with imageio.get_writer(path / "gradient.gif", mode='I', fps=10) as writer:
+#     base = imageio.imread(path / "gradient0.png")
+#     for i in range(10):
+#         writer.append_data(base)
+#     for filename in files:
+#         image = imageio.imread(filename)
+#         writer.append_data(image)
+
+image = PIL.Image.open(path / "gradient0.png").convert('P')
+images = [image] * 10 + [PIL.Image.open(file).convert('P') for file in files]
+image.save(path / 'gradient_descent.gif', save_all=True, append_images=images, loop=0, duration=12, transparency=0, disposal=2)
+
+os.remove(path / "gradient0.png")
+for file in files:
+    os.remove(file)
