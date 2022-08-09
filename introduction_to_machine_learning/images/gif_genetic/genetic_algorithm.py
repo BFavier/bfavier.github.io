@@ -107,12 +107,12 @@ def loss(Ypred: np.ndarray, Ytarget: np.ndarray) -> np.ndarray:
 
 def create_axes():
     fig = plt.figure(figsize=[8, 8])
-    ax = fig.add_subplot(projection='3d')
+    ax = fig.add_subplot(projection='3d', computed_zorder=False)
     return fig, ax
 
 
 def draw_observations(ax):
-    ax.scatter(Xobs[0], Xobs[1], Ytarget, marker=".", color="k")
+    ax.scatter(Xobs[0], Xobs[1], Ytarget, marker=".", color="k", zorder=0)
     ax.set_xlabel("$X_1$", fontsize=10)
     ax.set_ylabel("$X_2$", fontsize=10)
     ax.set_zlabel("Y", fontsize=10)
@@ -157,7 +157,7 @@ for step in range(100):
     Ypred = model(Xgrid, P0)
     l = loss(model(Xobs, P0), Ytarget)[0]
     ax.plot_wireframe(Xgrid[0], Xgrid[1], Ypred[0],
-                    rstride=1, cstride=1, cmap="inferno")
+                      rstride=1, cstride=1, cmap="inferno", zorder=1)
     params = ", ".join(f"{p:.3g}" for p in P0[0])
     ax.set_title(f"step {step+1}: loss={l:.3g}, (a, b, c, d, e, f)=({params})")
     ax.set_zlim([Ytarget.min(), Ytarget.max()])

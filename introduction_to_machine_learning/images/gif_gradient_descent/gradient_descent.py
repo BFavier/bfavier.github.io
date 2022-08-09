@@ -82,14 +82,14 @@ Ps = np.stack(Ps)
 def create_axes():
     fig = plt.figure(figsize=[10, 5])
     ax1 = fig.add_subplot(121)
-    ax2 = fig.add_subplot(122, projection='3d')
+    ax2 = fig.add_subplot(122, projection='3d', computed_zorder=False)
     return fig, ax1, ax2
 
 def draw_observations(i, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=True):
     Ypred = model(X, Ps[i])
     ax1.scatter(X, Ytarget, color="C0", marker=".", label="observations")
     if draw_model:
-        ax1.plot(X, Ypred, color="g", label="model")
+        ax1.plot(X, Ypred, color="C1", label="model")
         ax1.vlines(X, np.minimum(Ypred, Ytarget), np.maximum(Ypred, Ytarget), color="r", linewidths=0.3)
     ax1.set_ylim([0, 1.1*Ytarget.max()])
     ax2.plot_wireframe(A, B, L, rstride=1, cstride=1, color="g", zorder=0)
@@ -107,7 +107,7 @@ def draw_observations(i, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=True)
 Ra, Rb = np.abs(Ps - Ps[-1:]).max(axis=0)
 a_bounds = (Ps[-1][0] - Ra, Ps[-1][0] + Ra)
 b_bounds = (Ps[-1][1] - Rb, Ps[-1][1] + Rb)
-A, B = np.meshgrid(np.linspace(a_bounds[0], a_bounds[1], 100), np.linspace(b_bounds[0], b_bounds[1], 100))
+A, B = np.meshgrid(np.linspace(a_bounds[0], a_bounds[1], 30), np.linspace(b_bounds[0], b_bounds[1], 30))
 L = np.array([loss(model(X, P), Ytarget) for P in np.stack([A.reshape(-1), B.reshape(-1)], axis=1)]).reshape(A.shape)
 
 f, ax1, ax2 = create_axes()

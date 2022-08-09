@@ -22,7 +22,7 @@ Parametric models are models that have inputs, produce outputs, and have adjusta
 The parameters of the model are g the gravity acceleration constant, m the mass of the canonball, C the drag coefficient, and V0 the initial velocity at exit of the muzzle. The parameters of this physical model were determined independently by specially crafted experiments. For example, timing the fall of a marble of neglectible drag gives g. Weighting the canonball gives m. The drag coefficient C for a sphere of same diameter can be measured from the terminal velocity of a sphere made of a lighter material like paper. And finally, measuring the distance traveled by the canonball gives its initial velocity.
 
 
-![canonball_trajectory](images/trajectory/trajectory.gif)
+![canonball_trajectory](images/gif_trajectory/trajectory.gif)
 
 
 ## Cost function minimization
