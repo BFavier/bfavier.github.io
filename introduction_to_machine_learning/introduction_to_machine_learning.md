@@ -6,9 +6,7 @@ This is essentially the same definition as fitting a statistical model. The term
 
 ## Physics : a first example of parametric model
 
-Physics is the science of describing the laws of our universe with models. In his work "Physics", Aristotle (-384/-322) hypothesises that when the action imposed on an object ceases, the object returns to its natural motion: up for smoke, down for stones. He explains the fact that a stone thrown does not immediatly falls towards the ground after it leaves the hand due to the action of the displaced air. At the time, physics was closer to philosophy than science. His model was not quantitative and missing key notions such as momentum from Newtownian physics.
-
-Physics models remained mostly qualitative before Newton. For example, the trajectory of a canonball was approximated with simple geometrical shapes, and there existed Nomograms of the trajectory for several initial angles of the canon.
+Physics is the science of describing the laws of our universe with models. Physics models remained mostly qualitative before Newton. For example, the trajectory of a canonball was approximated with simple geometrical shapes, and there existed Nomograms of the trajectory for several initial angles of the canon.
 
 ![Ballistik_Walther_Hermann_Ryff_1517](images/Ballistik_Walther_Hermann_Ryff_1517.png)
 
@@ -29,14 +27,15 @@ The parameters of the model are g the gravity acceleration constant, m the mass 
 
 
 Because it is not always possible to make new experiments, or because some parameters cannot be decoupled from each other, another alternative exists to choose the parameters of a parametric model.
-In the previous example, lets assume we have the trajectory of a canonball.
-For any set of parameters we can compute the trajectory of the canonball thanks to the model. We could plot the trajectory for several random sets of parameters, and select the set that best fit the experimentally measured trajectory.
-This kind of approach was first publicated by Adrien-Marie Legendre in 1805 to find the equation of the conic best describing the trajectory of a comete. For his application, Legendre formalized the "best fit" as the set of parameters which minimizes the sum of square deviations between model and measurement points.
-Under the heavy influence of it later use in economics, this function that we want to minimize is called the loss function or sometimes cost function.
 
+In the previous example, lets assume we have the trajectory of a canonball.
+For any set of parameters we can compute the trajectory of the canonball thanks to the model. We could plot the trajectory for an initial set of parameters, and adjust the parameters to obtain the best possible fit with the experimentally measured trajectory.
 
 ![cost_function_minimization](images/cost_function_minimization.png)
 
+This kind of approach was first publicated by Adrien-Marie Legendre in *Nouvelles méthodes pour la détermination des orbites des comètes* in 1805. He applied this method to find the equation of the conic best describing the trajectory of a comete. For his application, Legendre formalized the "best fit" as the set of parameters which minimizes the sum of square deviations between model and measurement points. This was coined as the least squares method.
+
+Under the heavy influence of numerical optimization in economics modeling, this function that we want to minimize is called the loss function or sometimes cost function.
 
 Ideally this loss function has a single minimum, and an analytical derivative with regards to each of the parameters, for which we can solve for the zero. In these cases we can obtain an analytical solution of the parameters that minimize the loss. Notably, this is the case for linear model least squares regressions. However in most practical cases this is not true.
 
