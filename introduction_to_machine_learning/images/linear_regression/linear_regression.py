@@ -25,10 +25,10 @@ for i, ax in enumerate((ax1, ax2, ax3)):
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_zticks([])
-    ax.set_title(["linéaire", "polynôme du 2nd degrès", "polynôme avec intéractions"][i])
+    ax.set_title(["linear model", "polynom", "polynome with interactions"][i])
 
-# fig.tight_layout()
-plt.savefig(path / "linear_regression.png")
+fig.tight_layout()
+plt.savefig(path / "linear_regression.png", transparent=True, dpi=300)
 plt.show()
 
 IPython.embed()
