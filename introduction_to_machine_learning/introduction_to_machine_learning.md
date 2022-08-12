@@ -34,13 +34,13 @@ In the previous example, lets assume we have measurements of the trajectory of a
 
 This kind of approach was first publicated by Adrien-Marie Legendre in *Nouvelles méthodes pour la détermination des orbites des comètes* in 1805. He applied this method to find the equation of the conic best describing the trajectory of a comete. For his application, Legendre formalized the "best fit" as the set of parameters which minimizes the sum of square deviations between model and measurement points. The square in this criterion gives an higher weight to big errors, and takes the absolute value of the errors so that they can't compensate each others. This was coined as the least squares method.
 
-For the specific case of the fitting of a conic to observed positions, the sum of squared error admits a single minimum and no maximum. Consequently the zero of its derivative with regards the parameters gives the best fiting set of parameters: the best fit is given by an analytical solution.
+For some specific cases, the sum of squared errors admits a single minimum and no maximum. Consequently the zero of its derivative with regards the parameters gives the best fiting set of parameters: the best fit is given by an analytical solution. This is notably the case for linear models.
 
 ![linear models](images/linear_regression/linear_regression.png)
 
 ## Numerical optimization
 
-Sometime it is not possible to find analyticaly the minimum of a function. Optimization algorithms aim at finding numericaly the minimum of a function (often only a local minimum) in as few function evaluations as possible.
+Because it is not always possible analyticaly, optimization algorithms aim at finding numericaly the minimum of a function (often only a local minimum) in as few function evaluations as possible.
 
 Under the heavy influence of numerical optimization in economics modeling, this function that we want to minimize is called the loss function or sometimes cost function.
 
@@ -50,14 +50,24 @@ The most commonly used optimization algorithm is the gradient descent algorithm 
 
 The gradient is the vector of derivatives of the loss function with regards to each of the model's parameters. It points in the uphill direction, so we make small displacements in the parameters space, in the direction opposed to the gradient. The value of the gradient is to be updated at each step. Idealy an analytical expression of the gradient should be used, otherwise it can be approximated numerically.
 
-In the next animation we fit a linear function y=a*x+b to some data points. In the left panel we represent the data points in blue, the fitted curve in orange, and the deviation between observation and prediction in red. The loss to minimize is the sum of the square length of the red segments.
-
 ![gradient_descent](images/gif_gradient_descent/gradient_descent.gif)
 
-On the right panel, we ploted the value of the sum of squared error (the loss) as a function of the parameters a and b.
+In this animation we fit a linear function y=a*x+b to some data points. In the left panel we represent the data points in blue, the fitted curve in orange, and the deviation between observation and prediction in red. The loss to minimize is the sum of the squared lengths of the red segments.
+On the right panel, we ploted in green the value of the sum of squared error (the loss) as a function of the parameters a and b. The black dots are the position in the parameters space. In this two-parameters case, the gradient descent can be viewed as following the slope of a 3D surface and can be visualized.
 
 ### Genetic algorithm
 
-Another less often used optimization algorithm is the genetic algorithm optimization (John Holland 1960). It is inspired for the theory of evolution. The vector of all the parameters of the model is assimilated to the genetic coe of an individual. The criterion to optimize for is
-a fitness score that we want to maximize.
+Another less often used optimization algorithm is the genetic algorithm optimization (John Holland 1960). It is inspired for the theory of evolution. The vector of all the parameters of the model is assimilated to the genetic code of an individual. The criterion to optimize for is
+a "fitness score" of the individual to its environment that we want to maximize.
+
 ![genetic_algorithm](images/gif_genetic/genetic_algorithm.gif)
+
+We start with a random parameters vector. At each step we create "childs" copies of the previous state, with  the addition of random noise representing the mutations. Only the best fitted child is selected at the end.
+
+There exist a lot of variations, some more complex involving keeping the n best fit at each generation, or performing "matings" by mixing the parameter vectors of couples of individuals.
+
+This algorithm is less often used than gradient descent because it usually requires more function evaluation to obtain the same results, due to the fact that displacements are random and not guided by a "slope". However it has the adventage of handling non-diferentiable cost functions and integer parameters natively.
+
+## An history of commonly used machine learning models
+
+In this section we will describe the most common machine learning models.
