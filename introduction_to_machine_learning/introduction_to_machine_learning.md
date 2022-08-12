@@ -70,4 +70,4 @@ This algorithm is less often used than gradient descent because it usually requi
 
 ## An history of commonly used machine learning models
 
-In this section we will describe the most common machine learning models.
+In this section we will describe the most commonly used machine learning models for application to tabular data.
