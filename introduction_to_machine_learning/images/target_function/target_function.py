@@ -13,7 +13,7 @@ def target(X) -> np.ndarray:
     return np.exp(-0.5*(np.sum(((X - mu0)/s0)**2, axis=-1))) - np.exp(-0.5*(np.sum(((X - mu1)/s1)**2, axis=-1)))
 
 
-f = plt.figure(figsize=[10, 5])
+f = plt.figure(figsize=[12, 5])
 # surface
 X = np.stack(np.meshgrid(np.linspace(-1, 1, 101), np.linspace(-1, 1, 101)), axis=-1)
 Z = target(X)

@@ -70,4 +70,6 @@ This algorithm is less often used than gradient descent because it usually requi
 
 ## An history of commonly used machine learning models
 
-In this section we will describe the most commonly used machine learning models for application to tabular data.
+In this section we will describe the most commonly used machine learning models for application to tabular data. We will fit each model on 1000 random observations from the function y = exp(((x1-0.5)/0.3)^2 + ((x2-0.5)/0.3)^2) - exp(((x1+0.5)/0.3)^2 + ((x2+0.5)/0.3)
+
+![target function and observations](images/target_function/target_function.png)
