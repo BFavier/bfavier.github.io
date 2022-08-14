@@ -36,8 +36,6 @@ This kind of approach was first publicated by Adrien-Marie Legendre in *Nouvelle
 
 For some specific cases, the sum of squared errors admits a single minimum and no maximum. Consequently the zero of its derivative with regards the parameters gives the best fiting set of parameters: the best fit is given by an analytical solution. This is notably the case for linear models.
 
-![linear models](images/linear_regression/linear_regression.png)
-
 ## Numerical optimization
 
 Because it is not always possible analyticaly, optimization algorithms aim at finding numericaly the minimum of a function (often only a local minimum) in as few function evaluations as possible.
@@ -80,7 +78,9 @@ And each classification model will be fitted on random sample from two gaussian 
 
 ### linear and polynomial regression
 
+![linear and polynomials models](images/linear_regression/linear_regression.png)
 
+![overfitting with polynomial](images/gif_lagrange_polynome_interpolation/Lagrange_polynomial_interpolation.gif)
 
 ### k nearest neighbours
 

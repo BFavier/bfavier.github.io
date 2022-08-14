@@ -11,14 +11,14 @@ import sys
 sys.path.append(str(path.parent))
 from models_data import target, regression_data, classification_data
 
-# regression
-
 
 def model(X: np.ndarray, Xobs: np.ndarray, Yobs: np.ndarray, k: int) -> np.ndarray:
     distances = np.sqrt(np.sum((X[..., None] - Xobs.T[None, ...])**2, axis=1))
     neighbours = np.argpartition(-distances, -k, axis=1)[:, -k:]
     return np.mean(Yobs[neighbours], axis=1)
 
+
+# regression
 
 Xobs, Yobs = regression_data()
 
@@ -38,8 +38,8 @@ ax.set_zlabel("Y")
 
 f.savefig(path / "k_nearest_regression.png", transparent=True, dpi=300)
 
-
 # classification
+
 f, ax = plt.subplots(figsize=[5, 5])
 Xobs, Yobs = classification_data()
 is_b = Yobs.astype(bool)
@@ -48,8 +48,8 @@ X = np.stack(np.meshgrid(np.linspace(-2, 2, 500), np.linspace(-2, 2, 500)), axis
 Y = model(X.reshape(-1, 2), Xobs, Yobs, k=3).reshape(X.shape[:2])
 
 R = Y < 0.5
-G = Y >= 0.5
-B = np.zeros(Y.shape)
+B = Y >= 0.5
+G = np.zeros(Y.shape)
 image = np.stack([R, G, B], axis=-1)
 image = (image * 55 + [[[200, 200, 200]]]).astype("uint8")
 
@@ -64,8 +64,4 @@ ax.set_ylabel("X2")
 ax.yaxis.set_label_position("right")
 
 f.savefig(path / "k_nearest_classification.png", transparent=True, dpi=300)
-
-plt.show()
-
-IPython.embed()
 
