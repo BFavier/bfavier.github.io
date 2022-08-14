@@ -68,7 +68,7 @@ There exist a lot of variations, some more complex involving keeping the n best 
 
 This algorithm is less often used than gradient descent because it usually requires more function evaluation to obtain the same results, due to the fact that displacements are random and not guided by a "slope". However it has the adventage of handling non-diferentiable cost functions and integer parameters natively.
 
-## An history of commonly used machine learning models
+## An overview of commonly used machine learning models
 
 In this section we will describe the most commonly used machine learning models for application to tabular data. We will fit each regression model on 1000 noisy observations from the function y = exp(((x1-0.5)/0.3)^2 + ((x2-0.5)/0.3)^2) - exp(((x1+0.5)/0.3)^2 + ((x2+0.5)/0.3)
 
