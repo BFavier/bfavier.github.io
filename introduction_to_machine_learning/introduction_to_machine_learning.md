@@ -72,12 +72,18 @@ This algorithm is less often used than gradient descent because it usually requi
 
 In this section we will describe the most commonly used machine learning models for application to tabular data. We will fit each regression model on 1000 noisy observations from the function y = exp(((x1-0.5)/0.3)^2 + ((x2-0.5)/0.3)^2) - exp(((x1+0.5)/0.3)^2 + ((x2+0.5)/0.3)
 
-![target function and observations](images/target_function/regression_target.png)
+![target function and observations for regression](images/target_function/regression_target.png)
 
 And each classification model will be fitted on random sample from two gaussian distributions:
 
-![target function and observations](images/target_function/classification_target.png)
+![target function and observations for classification](images/target_function/classification_target.png)
+
+### linear and polynomial regression
+
 
 
 ### k nearest neighbours
 
+![knn regression](images/k_nearest_neighbours/k_nearest_regression.png)
+
+![knn classification](images/k_nearest_neighbours/k_nearest_classification.png)
