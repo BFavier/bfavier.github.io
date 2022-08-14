@@ -59,7 +59,7 @@ files = []
 for n, w in enumerate(weights, start=1):
     f, axes = plt.subplots(figsize=[10, 5], ncols=2)
     axes[0].scatter(Xobs, Ytarget, label="training data")
-    axes[0].scatter(Xval, Yval, label="validation data")
+    axes[0].scatter(Xval, Yval, label="test data")
     axes[0].plot(X, model(X, w, Xobs, Ytarget), color="C3", label=f"polynomial of order {n}")
     axes[0].set_ylim(ylims)
     axes[0].set_xlabel("x")

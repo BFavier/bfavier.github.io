@@ -66,9 +66,19 @@ There exist a lot of variations, some more complex involving keeping the n best 
 
 This algorithm is less often used than gradient descent because it usually requires more function evaluation to obtain the same results, due to the fact that displacements are random and not guided by a "slope". However it has the adventage of handling non-diferentiable cost functions and integer parameters natively.
 
-## An overview of commonly used machine learning models
+## Universal regressors, overfiting and underfiting
 
-In this section we will describe the most commonly used machine learning models for application to tabular data. We will fit each regression model on 1000 noisy observations from the function y = exp(((x1-0.5)/0.3)^2 + ((x2-0.5)/0.3)^2) - exp(((x1+0.5)/0.3)^2 + ((x2+0.5)/0.3)
+Thanks to numerical optimization we can fit any parametric model to observations. However finding an adequate mathematical model for each practical case would be an inefficient approach. Some universal regressors, that can approximate any function by as close as wanted, are used instead. Usualy, the number of parameters of these models can be adjusted, and increasing the number of parameters increase the expressive power of these models.
+
+Setting the number of parameters too low might hurt expresiveness of the model, and as such the model might underperform. This is called underfitting. Setting the number of parameters too high, in addition to hurt computation speed, might also give the model an excess of expressiv power, which might hurt generalization capability of the model. This is called overfitting. The parameters that are chosen once and not changed during fitting, such as the number of parameters are called hyper-parameters of the model.
+
+![overfitting with polynomial](images/gif_lagrange_polynome_interpolation/Lagrange_polynomial_interpolation.gif)
+
+In this animation, a polynomial of increasing order is fited to a set of training data. Another set of data called the test data is put aside an not used during training. The performance of the model can be evaluated on the test data, which is representative of the real performance of the model on unseen data. We can see that a more expressive model doesn't always mean a better model. Hyper-parameters are often adjusted manually until fnding satisfactory results as it is often too costly to train a high number of models.
+
+## An overview of some commonly used models
+
+In this section we will describe some commonly used machine learning models for application to tabular data. We will fit each regression model on 1000 noisy observations from the function y = exp(((x1-0.5)/0.3)^2 + ((x2-0.5)/0.3)^2) - exp(((x1+0.5)/0.3)^2 + ((x2+0.5)/0.3)
 
 ![target function and observations for regression](images/target_function/regression_target.png)
 
@@ -79,8 +89,6 @@ And each classification model will be fitted on random sample from two gaussian 
 ### linear and polynomial regression
 
 ![linear and polynomials models](images/linear_regression/linear_regression.png)
-
-![overfitting with polynomial](images/gif_lagrange_polynome_interpolation/Lagrange_polynomial_interpolation.gif)
 
 ### k nearest neighbours
 
