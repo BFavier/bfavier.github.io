@@ -88,7 +88,21 @@ And each classification model will be fitted on random sample from two gaussian 
 
 ### linear and polynomial regression
 
+Linear models are models of the form y = a1 \* x1 + ... + an \* xn + b. 
+This include polynomials of any order if we set xi = x^i. Sometimes interaction terms of the form xi\*xj are also added, as well as any custom numerical feature.
+This kind of models have the adventage to have an analytical for the parameters that minimize the sum of squared errors to observations, which means training is orders of magnitude faster than other type of models. Linear models (polynomials of order one) have also the adventage to be easy to interpret.
+
 ![linear and polynomials models](images/linear_regression/linear_regression.png)
+
+Polynomials are in theory universal regressors: Any set of observations (y, x1, ..., xn) admits a multivariate Lagrange interpolation polynomial that goes through all observations without any error. In practice they generalize poorly to new data, especially with high polynomial orders. And as illustrated below its expressive power scales poorly with polynomial order. Even for a simple 1D function such has the absolute value.
+
+![poor fitting with polynomial](images/gif_v_shape_linear_regression/v_shape.gif)
+
+The fitting of our test function gives the following result:
+
+![polynomial regression](images/polynomial_fit/polynomial_regression.png)
+
+For this reason this kind of models are mostly restricted to linear models or low order polynomials.
 
 ### k nearest neighbours
 

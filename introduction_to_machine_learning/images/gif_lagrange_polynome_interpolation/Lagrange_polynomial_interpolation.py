@@ -14,7 +14,7 @@ path = pathlib.Path(__file__).parent
 
 
 def target(X):
-    return 3*X + 30 + np.random.normal(0, 10, size=X.shape)
+    return 10 * (X**3 + 0.5 * X**2 * X + np.random.normal(0, 0.2, size=X.shape) * (0.3 + np.abs(X)))
 
 
 def fit(Xobs: np.ndarray, Ytarget: np.ndarray, n: int) -> np.ndarray:
@@ -42,16 +42,16 @@ def model(X: np.ndarray, w: np.ndarray, Xobs: np.ndarray, Ytarget: np.ndarray) -
     return x@w * Ytarget.std() + Ytarget.mean()
 
 
-Xobs = np.linspace(7, 20, 30, dtype=np.longdouble)
-X = np.linspace(7, 20, 1000, dtype=np.longdouble)
+Xobs = np.linspace(-1, 1, 30, dtype=np.longdouble)
+X = np.linspace(-1, 1, 1000, dtype=np.longdouble)
 Ytarget = target(Xobs)
 delta = Ytarget.max() - Ytarget.min()
-ylims = [0, Ytarget.max() + 0.05*delta]
+ylims = [Ytarget.min() - 0.05*delta, Ytarget.max() + 0.05*delta]
 
-Xval = np.linspace(7, 20, 10, dtype=np.longdouble)
+Xval = np.linspace(-1, 1, 20, dtype=np.longdouble)
 Yval = target(Xval)
 
-weights = [fit(Xobs, Ytarget, n) for n in range(1, len(Xobs))]
+weights = [fit(Xobs, Ytarget, n) for n in range(1, 21)]
 MSE_train = [np.sum((Ytarget - model(Xobs, w, Xobs, Ytarget))**2) for w in weights]
 MSE_val = [np.sum((Yval - model(Xval, w, Xobs, Ytarget))**2) for w in weights]
 
@@ -64,6 +64,8 @@ for n, w in enumerate(weights, start=1):
     axes[0].set_ylim(ylims)
     axes[0].set_xlabel("x")
     axes[0].set_ylabel("y")
+    axes[0].set_xticks([])
+    axes[0].set_yticks([])
     axes[0].legend(loc="upper left")
 
     x_train = np.arange(1, n+1) - 0.25/2
@@ -98,7 +100,7 @@ for n, w in enumerate(weights, start=1):
 
 image = PIL.Image.open(files[0]).convert('P')
 images = [PIL.Image.open(file).convert('P') for file in files[1:] + [files[-1]]*5]
-image.save(path / 'Lagrange_polynomial_interpolation.gif', save_all=True, append_images=images, loop=0, duration=10, transparency=0, disposal=2)
+image.save(path / 'Lagrange_polynomial_interpolation.gif', save_all=True, append_images=images, loop=0, duration=500, transparency=0, disposal=2)
 
 for file in files:
     os.remove(file)
