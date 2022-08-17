@@ -20,5 +20,5 @@ def classification_data() -> Tuple[np.ndarray, np.ndarray]:
     Xa = np.random.multivariate_normal([-0.5, -0.5], [[0.3, 0.], [0., 0.3]], size=500)
     Xb = np.random.multivariate_normal([0.5, 0.5], [[0.3, 0.], [0., 0.3]], size=500)
     Xobs = np.concatenate([Xa, Xb], axis=0)
-    Yobs = np.concatenate([np.zeros(len(Xa)), np.ones(len(Xb))])
+    Yobs = np.concatenate([np.zeros(len(Xa), dtype=int), np.ones(len(Xb), dtype=int)])
     return Xobs, Yobs

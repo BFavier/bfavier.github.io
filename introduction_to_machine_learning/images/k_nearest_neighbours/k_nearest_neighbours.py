@@ -42,8 +42,8 @@ delta = sup - inf
 lims = [inf-0.05*delta, sup+0.05*delta]
 ax.set_xlim(lims)
 ax.set_ylim(lims)
-ax.set_xlabel("x1")
-ax.set_ylabel("x2")
+ax.set_xlabel("X1")
+ax.set_ylabel("X2")
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_aspect("equal")

@@ -104,11 +104,11 @@ Polynomials are in theory universal regressors (see Lagrange polynomial interpol
 
 The fitting of our test function gives the following result:
 
-![polynomial regression](images/polynomial_fit/polynomial_regression.png)
+![polynomial regression](images/polynomial/polynomial_regression.png)
 
 ### k nearest neighbours
 
-The k nearest neighbours model was invented in 1951 by Joseph Hodges. It is an interpolation method from labeled observations rather than a parametric model. The Y value of a new observation is given by the average (sometime weighted by inverse distance) of the Y of the k closest labeled observations.
+The k nearest neighbours model was invented in 1951 by Joseph Hodges. It is an interpolation method from labeled observations rather than a parametric model. The Y value of a new observation is given by the average (sometime weighted by inverse distance) of the Y of the k closest labeled observations, with the integer k an hyperparameter of the model (usualy 3 or 5).
 
 ![knn evaluation](images/k_nearest_neighbours/k_nearest_evaluation.png)
 
