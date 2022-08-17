@@ -68,7 +68,7 @@ We start with a random parameters vector. At each step we create "childs" copies
 
 There exist a lot of variations, some more complex involving keeping the n best fit at each generation, or performing "matings" by mixing the parameter vectors of couples of individuals.
 
-This algorithm is less often used than gradient descent because it usually requires more function evaluation to obtain the same results, due to the fact that displacements are random and not guided by a "slope". However it has the adventage of handling non-diferentiable cost functions and integer parameters natively.
+This algorithm is less often used than gradient descent because it usually requires more function evaluation to obtain the same results, due to the fact that displacements are random and not guided by a "slope". However it has the advantage of handling non-diferentiable cost functions and integer parameters natively.
 
 ## Universal regressors and overfiting
 
@@ -92,13 +92,13 @@ And each classification model will be fitted on random sample from two gaussian 
 
 ### linear and polynomial regression
 
-Linear models are models of the form y = a1 \* x1 + ... + an \* xn + b. 
+Linear models are models of the form y = a1 \* x1 + ... + an \* xn + b.
 This include polynomials of any order if we set xi = x^i. Sometimes interaction terms of the form xi\*xj are also added, as well as any custom numerical feature.
-This kind of models have the adventage to have an analytical for the parameters that minimize the sum of squared errors to observations, which means training is orders of magnitude faster than other type of models. Linear models (polynomials of order one) have also the adventage to be easy to interpret.
+This kind of models have the advantage to have an analytical solution for the parameters that minimize the sum of squared errors to observations, which means training is orders of magnitude faster than other type of models. Linear models (polynomials of order one) also have the advantage to be simple enough that its parameters can be interpreted. Althought this is always dangerous with correlated inputs as the values of the optimum parameters can be extremly sensitive to noise. For example an increased weight can be compensated by a reduced weight from another highly correlated variable.
 
 ![linear and polynomials models](images/linear_regression/linear_regression.png)
 
-Polynomials are in theory universal regressors: Any set of observations (y, x1, ..., xn) admits a multivariate Lagrange interpolation polynomial that goes through all observations without any error. In practice they generalize poorly to new data, especially with high polynomial orders. And as illustrated below its expressive power scales poorly with polynomial order. Even for a simple 1D function such has the absolute value.
+Polynomials are in theory universal regressors (see Lagrange polynomial interpolation). In practice they generalize poorly to new data, especially with high polynomial orders. And as illustrated below its expressive power scales poorly with polynomial order. Even for a simple 1D function such has the absolute value. For this reason this kind of models are usualy restricted to linear models or low order polynomials. They are used alone to describe low complexity functions, as piecewise linear function or piecewise polynomials for more complex functions (for example NASA polynomials fitted to describe thermodynamic parameters).
 
 ![poor fitting with polynomial](images/gif_v_shape_linear_regression/v_shape.gif)
 
@@ -106,10 +106,18 @@ The fitting of our test function gives the following result:
 
 ![polynomial regression](images/polynomial_fit/polynomial_regression.png)
 
-For this reason this kind of models are mostly restricted to linear models or low order polynomials.
-
 ### k nearest neighbours
+
+The k nearest neighbours model was invented in 1951 by Joseph Hodges. It is an interpolation method from labeled observations rather than a parametric model. The Y value of a new observation is given by the average (sometime weighted by inverse distance) of the Y of the k closest labeled observations.
+
+![knn evaluation](images/k_nearest_neighbours/k_nearest_evaluation.png)
+
+This model has the advantage of beeing easy to interpret, as for a new observation it identifies similar points already labeled. It can be used for regression as well as classification and requires no training.
+The evaluation on test data gives the following results:
 
 ![knn regression](images/k_nearest_neighbours/k_nearest_regression.png)
 
 ![knn classification](images/k_nearest_neighbours/k_nearest_classification.png)
+
+
+### decision tree

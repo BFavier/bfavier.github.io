@@ -21,7 +21,7 @@ def model(X: np.ndarray, Xobs: np.ndarray, Yobs: np.ndarray, k: int) -> np.ndarr
 # explaination
 
 k = 3
-N = 5
+N = 10
 X = np.random.normal(0., 0.3, size=(N, 2))
 X_new = np.zeros((1, 2))
 distances = np.sqrt(np.sum((X - X_new)**2, axis=1))
@@ -68,7 +68,7 @@ ax.set_zticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.set_zlabel("Y")
-ax.set_title("k nearest neighbours")
+ax.set_title("k nearest neighbours (k=5)")
 
 f.savefig(path / "k_nearest_regression.png", transparent=True, dpi=300)
 
@@ -95,8 +95,7 @@ ax.set_xticks([])
 ax.set_yticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
-ax.set_title("k nearest neighbours")
-ax.yaxis.set_label_position("right")
+ax.set_title("k nearest neighbours (k=5)")
 
 f.savefig(path / "k_nearest_classification.png", transparent=True, dpi=300)
 
