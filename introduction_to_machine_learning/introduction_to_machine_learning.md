@@ -121,3 +121,9 @@ The evaluation on test data gives the following results:
 
 
 ### decision tree
+
+![decision tree](images/gif_decision_tree/decision_tree.png)
+
+![decision tree regression](images/gif_decision_tree/decision_tree_regression.gif)
+
+![decision tree classification](images/gif_decision_tree/decision_tree_classification.gif)
