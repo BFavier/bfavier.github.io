@@ -18,6 +18,35 @@ def model(X: np.ndarray, Xobs: np.ndarray, Yobs: np.ndarray, k: int) -> np.ndarr
     return np.mean(Yobs[neighbours], axis=1)
 
 
+# explaination
+
+k = 3
+N = 5
+X = np.random.normal(0., 0.3, size=(N, 2))
+Y = np.random.binomial(1, 0.5, size=N)
+X_new = np.zeros((1, 2))
+distances = np.sqrt(np.sum((X - X_new)**2, axis=1))
+neighbours = np.argpartition(distances, k)[:k]
+colors = mpl.cm.Set1.colors
+f, ax = plt.subplots(figsize=[5, 5])
+ax.scatter(X[..., 0], X[..., 1], c=[colors[i] for i in Y], zorder=1)
+ax.scatter(X_new[..., 0], X_new[..., 1], color="k", zorder=1)
+for i in neighbours:
+    x, y = zip(*[X[i], X_new[0]])
+    ax.plot(x, y, color=colors[Y[i]], zorder=0)
+ax.add_patch(plt.Circle(X[0], max([distances[i] for i in neighbours]), color='k', fill=False, zorder=0))
+inf, sup = min(X.min(), 0), max(X.max(), 0)
+delta = sup - inf
+lims = [inf-0.05*delta, sup+0.05*delta]
+ax.set_xlim(lims)
+ax.set_ylim(lims)
+ax.set_xlabel("x1")
+ax.set_ylabel("x2")
+ax.set_xticks([])
+ax.set_yticks([])
+ax.set_aspect("equal")
+plt.show()
+
 # regression
 
 Xobs, Yobs = regression_data()
