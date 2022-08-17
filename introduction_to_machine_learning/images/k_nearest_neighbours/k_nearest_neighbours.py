@@ -3,19 +3,13 @@ from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 import pathlib
 import IPython
+import matplotlib as mpl
 
 path = pathlib.Path(__file__).parent
 
-# regression
-N = 1000
-Xobs = np.random.uniform(-1, 1, size=(N, 2))
-
-
-def target(X) -> np.ndarray:
-    x = X[..., None]
-    mu0, s0 = np.array([[-0.5, -0.5]]), 0.3
-    mu1, s1 = np.array([[0.5, 0.5]]), 0.3
-    return np.exp(-0.5*(np.sum(((X - mu0)/s0)**2, axis=-1))) - np.exp(-0.5*(np.sum(((X - mu1)/s1)**2, axis=-1)))
+import sys
+sys.path.append(str(path.parent))
+from models_data import target, regression_data, classification_data
 
 
 def model(X: np.ndarray, Xobs: np.ndarray, Yobs: np.ndarray, k: int) -> np.ndarray:
@@ -24,52 +18,52 @@ def model(X: np.ndarray, Xobs: np.ndarray, Yobs: np.ndarray, k: int) -> np.ndarr
     return np.mean(Yobs[neighbours], axis=1)
 
 
-Yobs = target(Xobs) + np.random.normal(0, 0.1, size=Xobs.shape[0])
+# regression
+
+Xobs, Yobs = regression_data()
 
 X = np.stack(np.meshgrid(np.linspace(-1, 1, 100), np.linspace(-1, 1, 100)), axis=-1)
 Y = model(X.reshape(-1, 2), Xobs, Yobs, k=5).reshape(X.shape[:2])
 
-f = plt.figure(figsize=[10, 5])
-ax = f.add_subplot(121, projection="3d")
-ax.scatter(Xobs[:, 0], Xobs[:, 1], Yobs, marker=".", color="k", depthshade=False, zorder=1)
+f = plt.figure(figsize=[5, 5])
+ax = f.add_subplot(111, projection="3d")
 
-ax.plot_surface(X[..., 0], X[..., 1], Y, cmap="cividis", zorder=0)
+ax.plot_surface(X[..., 0], X[..., 1], Y, rstride=1, cstride=1, cmap="viridis", zorder=0)
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_zticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.set_zlabel("Y")
+ax.set_title("k nearest neighbours")
 
+f.savefig(path / "k_nearest_regression.png", transparent=True, dpi=300)
 
 # classification
-ax = f.add_subplot(122)
-Xa = np.random.multivariate_normal([-0.4, -0.4], [[0.2, 0.], [0., 0.2]], size=100)
-Xb = np.random.multivariate_normal([0.4, 0.4], [[0.2, 0.], [0., 0.2]], size=100)
-Xobs = np.concatenate([Xa, Xb], axis=0)
-Yobs = np.concatenate([np.zeros(len(Xa)), np.ones(len(Xb))])
+
+f, ax = plt.subplots(figsize=[5, 5])
+Xobs, Yobs = classification_data()
+is_b = Yobs.astype(bool)
+Xa, Xb = Xobs[~is_b], Xobs[is_b]
+X = np.stack(np.meshgrid(np.linspace(-2, 2, 500), np.linspace(-2, 2, 500)), axis=-1)
 Y = model(X.reshape(-1, 2), Xobs, Yobs, k=3).reshape(X.shape[:2])
 
 R = Y < 0.5
-G = Y >= 0.5
-B = np.zeros(Y.shape)
+B = Y >= 0.5
+G = np.zeros(Y.shape)
 image = np.stack([R, G, B], axis=-1)
 image = (image * 55 + [[[200, 200, 200]]]).astype("uint8")
 
-ax.imshow(image)
-ax.scatter((Xa[:, 0]+1)/2*len(image), (Xa[:, 1]+1)/2*len(image), marker="o", color="r")
-ax.scatter((Xb[:, 0]+1)/2*len(image), (Xb[:, 1]+1)/2*len(image), marker="v", color="g")
-ax.set_xlim([0, image.shape[1]])
-ax.set_ylim([0, image.shape[0]])
+ax.imshow(image, extent=(-2, 2, -2, 2), origin="lower")
+ax.scatter(Xobs[..., 0], Xobs[..., 1], c=[mpl.cm.Set1.colors[int(i)] for i in Yobs], marker=".")
+ax.set_xlim([-2, 2])
+ax.set_ylim([-2, 2])
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
+ax.set_title("k nearest neighbours")
 ax.yaxis.set_label_position("right")
 
-f.savefig(path / "k_nearest.png")
-
-plt.show()
-
-IPython.embed()
+f.savefig(path / "k_nearest_classification.png", transparent=True, dpi=300)
 

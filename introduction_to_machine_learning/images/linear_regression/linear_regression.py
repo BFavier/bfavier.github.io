@@ -11,7 +11,7 @@ Y1 = 0.8 * X1 + 0.6*X2
 Y2 = X1**2 - X2**2 + 0.7*X1 + 0.9*X2
 Y3 = X1**2 + X1*X2 + 0.8*X1
 
-fig = plt.figure(figsize=[15, 5])
+fig = plt.figure(figsize=[15, 6])
 ax1 = fig.add_subplot(131, projection='3d')
 ax2 = fig.add_subplot(132, projection='3d')
 ax3 = fig.add_subplot(133, projection='3d')
@@ -25,10 +25,10 @@ for i, ax in enumerate((ax1, ax2, ax3)):
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_zticks([])
-    ax.set_title(["linéaire", "polynôme du 2nd degrès", "polynôme avec intéractions"][i])
+    ax.set_title(["linear model", "polynomial", "polynomial with interactions"][i])
 
-# fig.tight_layout()
-plt.savefig(path / "linear_regression.png")
+fig.tight_layout()
+plt.savefig(path / "linear_regression.png", transparent=True, dpi=300)
 plt.show()
 
 IPython.embed()
