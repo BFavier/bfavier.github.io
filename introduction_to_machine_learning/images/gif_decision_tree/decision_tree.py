@@ -3,6 +3,7 @@ from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 import pathlib
 import imageio
+from sklearn import tree
 import IPython
 
 path = pathlib.Path(__file__).parent
