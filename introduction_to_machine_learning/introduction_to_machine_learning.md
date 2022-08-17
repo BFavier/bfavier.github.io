@@ -66,11 +66,11 @@ There exist a lot of variations, some more complex involving keeping the n best 
 
 This algorithm is less often used than gradient descent because it usually requires more function evaluation to obtain the same results, due to the fact that displacements are random and not guided by a "slope". However it has the adventage of handling non-diferentiable cost functions and integer parameters natively.
 
-## Universal regressors, overfiting and underfiting
+## Universal regressors and overfiting
 
 Thanks to numerical optimization we can fit any parametric model to observations. However finding an adequate mathematical model for each practical case would be an inefficient approach. Some universal regressors, that can approximate any function by as close as wanted, are used instead. Usualy, the number of parameters of these models can be adjusted, and increasing the number of parameters increase the expressive power of these models.
 
-Setting the number of parameters too low might hurt expresiveness of the model, and as such the model might underperform. This is called underfitting. Setting the number of parameters too high, in addition to hurt computation speed, might also give the model an excess of expressiv power, which might hurt generalization capability of the model. This is called overfitting. The parameters that are chosen once and not changed during fitting, such as the number of parameters are called hyper-parameters of the model.
+Setting the number of parameters too low might hurt expresiveness of the model, and as such the model might underperform. Setting the number of parameters too high, in addition to hurt computation speed, might also give the model an excess of expressive power. Which might hurt generalization capability of the model because it learns noise of a sample and not a general trend in the data. This is called overfitting. The parameters that are chosen once and not changed during fitting, such as the number of parameters, are called hyper-parameters of the model.
 
 ![overfitting with polynomial](images/gif_lagrange_polynome_interpolation/Lagrange_polynomial_interpolation.gif)
 
