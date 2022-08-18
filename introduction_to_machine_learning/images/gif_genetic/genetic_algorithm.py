@@ -10,16 +10,19 @@ import os
 path = pathlib.Path(__file__).parent
 
 Xgrid = np.stack(np.meshgrid(np.linspace(
-    0, 24, 100), np.linspace(0, 100, 100)))
+    -1, 1, 100), np.linspace(-1, 1, 100)))
 
 
 def target(X: np.ndarray) -> np.ndarray:
-    return 200 - 0.1*(X[0] - 12)**2 - 0.01*(X[1] - 50)**2 - 0.2*X[1]
+    return X[0]**2 - X[1]**2
 
 
-Xobs = np.stack([np.random.uniform(0, 24, 1000),
-                np.random.uniform(0, 100, 1000)])
-Ytarget = target(Xobs) + np.random.uniform(-10, 10, Xobs.shape[1])
+Xobs = np.stack([np.random.uniform(-1, 1, 1000),
+                np.random.uniform(-1, 1, 1000)])
+Ytarget = target(Xobs) + np.random.uniform(-0.1, 0.1, Xobs.shape[1])
+
+inf, sup = Ytarget.min(), Ytarget.max()
+delta = sup - inf
 
 P0 = np.random.normal(0, 0.3, size=(1, 5))
 
@@ -106,16 +109,22 @@ def loss(Ypred: np.ndarray, Ytarget: np.ndarray) -> np.ndarray:
 
 
 def create_axes():
-    fig = plt.figure(figsize=[8, 8])
-    ax = fig.add_subplot(projection='3d', computed_zorder=False)
-    return fig, ax
+    fig = plt.figure(figsize=[12, 5])
+    ax1 = fig.add_subplot(121, projection='3d', computed_zorder=False)
+    ax2 = fig.add_subplot(122, projection='3d', computed_zorder=False)
+    return fig, ax1, ax2
 
 
 def draw_observations(ax):
-    ax.scatter(Xobs[0], Xobs[1], Ytarget, marker=".", color="k", zorder=0)
-    ax.set_xlabel("$X_1$", fontsize=10)
-    ax.set_ylabel("$X_2$", fontsize=10)
-    ax.set_zlabel("Y", fontsize=10)
+    ax.scatter(Xobs[0], Xobs[1], Ytarget, marker=".", zorder=0,
+               c=Ytarget, cmap="viridis", vmin=inf, vmax=sup)
+    ax.set_xlabel("$X_1$")
+    ax.set_ylabel("$X_2$")
+    ax.set_zlabel("Y")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_zticks([])
+    ax.set_zlim([inf-0.05*delta, sup+0.05*delta])
 
 
 def next_P(P0: np.ndarray, n_childs: int = 100) -> np.ndarray:
@@ -141,27 +150,27 @@ def next_P(P0: np.ndarray, n_childs: int = 100) -> np.ndarray:
     _, indexes = zip(*sort[:n_models])
     return P[indexes, ...]
 
-f, ax = create_axes()
-draw_observations(ax)
-ax.set_title(f"step 0:")
-ax.set_zlim([Ytarget.min(), Ytarget.max()])
-f.tight_layout()
-f.savefig(path / "genetic0.png", transparent=True, dpi=300)
-plt.close(f)
+f, ax1, ax = create_axes()
+draw_observations(ax1)
 
 files = []
-for step in range(100):
-    file_name = path / f"genetic{step+1}.png"
-    f, ax = create_axes()
-    draw_observations(ax)
+for step in range(1, 101):
+    ax.clear()
+    file_name = path / f"genetic{step}.png"
     Ypred = model(Xgrid, P0)
     l = loss(model(Xobs, P0), Ytarget)[0]
-    ax.plot_wireframe(Xgrid[0], Xgrid[1], Ypred[0],
-                      rstride=1, cstride=1, cmap="inferno", zorder=1)
+    ax.plot_surface(Xgrid[0], Xgrid[1], Ypred[0],
+                    rstride=1, cstride=1, cmap="viridis", vmin=inf, vmax=sup, zorder=1)
+    ax.set_xlabel("$X_1$")
+    ax.set_ylabel("$X_2$")
+    ax.set_zlabel("Y")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_zticks([])
+    ax.set_zlim([inf-0.05*delta, sup+0.05*delta])
     params = ", ".join(f"{p:.3g}" for p in P0[0])
-    ax.set_title(f"step {step+1}: loss={l:.3g}, (a, b, c, d, e, f)=({params})")
+    f.suptitle(f"step {step}: loss={l:.3g}, (a, b, c, d, e, f)=({params})")
     ax.set_zlim([Ytarget.min(), Ytarget.max()])
-    f.tight_layout()
     f.savefig(file_name, transparent=True, dpi=300)
     print(file_name)
     files.append(file_name)
@@ -178,10 +187,9 @@ for step in range(100):
 #         image = imageio.imread(filename)
 #         writer.append_data(image)
 
-image = PIL.Image.open(path / f"genetic0.png").convert('P')
-images = [image] * 9 + [PIL.Image.open(file).convert('P') for file in files]
-image.save(path / 'genetic_algorithm.gif', save_all=True, append_images=images, loop=0, duration=10, transparency=0, disposal=2)
+image = PIL.Image.open(path / files[0])
+images = [PIL.Image.open(file) for file in files[1:]]
+image.save(path / 'genetic_algorithm.webp', save_all=True, append_images=images, loop=0, duration=10, disposal=2)
 
-os.remove(path / f"genetic0.png")
 for file in files:
     os.remove(file)

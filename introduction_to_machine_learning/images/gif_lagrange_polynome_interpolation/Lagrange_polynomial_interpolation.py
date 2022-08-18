@@ -100,7 +100,7 @@ for n, w in enumerate(weights, start=1):
 
 image = PIL.Image.open(files[0]).convert('P')
 images = [PIL.Image.open(file).convert('P') for file in files[1:] + [files[-1]]*5]
-image.save(path / 'Lagrange_polynomial_interpolation.gif', save_all=True, append_images=images, loop=0, duration=500, transparency=0, disposal=2)
+image.save(path / 'Lagrange_polynomial_interpolation.webp', save_all=True, append_images=images, loop=0, duration=300, transparency=0, disposal=2)
 
 for file in files:
     os.remove(file)

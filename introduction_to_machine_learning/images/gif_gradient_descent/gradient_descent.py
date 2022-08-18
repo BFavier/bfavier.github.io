@@ -3,7 +3,7 @@ from turtle import width
 import numpy as np
 from mpl_toolkits import mplot3d
 from matplotlib.ticker import FormatStrFormatter
-import matplotlib
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import PIL
 import pathlib
@@ -13,8 +13,8 @@ import IPython
 # plt.style.use("bmh")
 path = pathlib.Path(__file__).parent
 
-X = np.linspace(7, 20, 100)
-Ytarget = 3*X + 30 + np.random.normal(0, 10, X.shape)
+X = np.linspace(-1, 1, 100)
+Ytarget = 3*X + 3 + np.random.normal(0, 0.3, X.shape)
 
 
 def model(X: np.ndarray, P: np.ndarray) -> np.ndarray:
@@ -34,8 +34,7 @@ def model(X: np.ndarray, P: np.ndarray) -> np.ndarray:
         Ypred, array of floats of shape (N,)
     """
     a, b = P
-    x = X/X.mean()
-    return (a*x + b) * Ytarget.mean()
+    return (a*X + b)
 
 
 def loss(Ypred: np.ndarray, Ytarget: np.ndarray) -> np.ndarray:
@@ -61,14 +60,12 @@ def grad(X: np.ndarray, P: np.ndarray, Ytarget: np.ndarray):
     """
     analytical solution of the loss' gradient with regard to P
     """
-    X = X/X.mean()
-    Ytarget = Ytarget/Ytarget.mean()
     a, b = P
     dL_da = np.sum(-2*X*Ytarget + 2*a*X**2 + 2*b*X)
     dL_db = np.sum(-2*Ytarget + 2*a*X + 2*b)
     return np.array([dL_da, dL_db])
 
-lr = 3.0E-4
+lr = 1.0E-3
 Ps = [np.array([0., 0.])]
 Ls = [loss(model(X, Ps[0]), Ytarget)]
 for epoch in range(100):
@@ -85,23 +82,37 @@ def create_axes():
     ax2 = fig.add_subplot(122, projection='3d', computed_zorder=False)
     return fig, ax1, ax2
 
+
+colors = mpl.cm.Set1.colors
+
+
 def draw_observations(i, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=True):
     Ypred = model(X, Ps[i])
-    ax1.scatter(X, Ytarget, color="C0", marker=".", label="observations")
+    ax1.scatter(X, Ytarget, color=colors[1], marker=".", label="observations")
     if draw_model:
-        ax1.plot(X, Ypred, color="C1", label="model")
-        ax1.vlines(X, np.minimum(Ypred, Ytarget), np.maximum(Ypred, Ytarget), color="r", linewidths=0.3)
-    ax1.set_ylim([0, 1.1*Ytarget.max()])
-    ax2.plot_wireframe(A, B, L, rstride=1, cstride=1, color="g", zorder=0)
+        ax1.plot(X, Ypred, color=colors[2], label="model")
+        ax1.vlines(X, np.minimum(Ypred, Ytarget), np.maximum(Ypred, Ytarget), color=colors[0], linewidths=0.3)
+    inf, sup = Ytarget.min(), Ytarget.max()
+    delta = sup-inf
+    ax1.set_ylim([inf-0.05*delta, sup+0.05*delta])
+    inf, sup = L.min(), L.max()
+    delta = sup-inf
+    ax2.plot_surface(A, B, L, rstride=1, cstride=1, cmap="viridis", zorder=0)
+    ax2.view_init(azim=-15)
     a, b = Ps[:i+1].transpose()
-    ax2.scatter(a, b, Ls[:i+1], color="k", zorder=1, depthshade=False)
+    ax2.scatter(a, b, Ls[:i+1], color="k", marker=".", zorder=1, depthshade=False)
     ax2.set_xlabel("$a$")
     ax2.set_ylabel("$b$")
     ax2.set_zlabel("loss")
+    ax2.set_xticks([])
+    ax2.set_yticks([])
     ax2.set_zticks([])
+    ax2.set_zlim([inf-0.05*delta, sup+0.05*delta])
     ax1.set_title(f"step {i}:")
     ax1.set_xlabel("x")
     ax1.set_ylabel("y")
+    ax1.set_xticks([])
+    ax1.set_yticks([])
 
 # inf, sup = Ps.min(axis=0), Ps.max(axis=0)
 Ra, Rb = np.abs(Ps - Ps[-1:]).max(axis=0)
@@ -111,16 +122,17 @@ A, B = np.meshgrid(np.linspace(a_bounds[0], a_bounds[1], 30), np.linspace(b_boun
 L = np.array([loss(model(X, P), Ytarget) for P in np.stack([A.reshape(-1), B.reshape(-1)], axis=1)]).reshape(A.shape)
 
 f, ax1, ax2 = create_axes()
-draw_observations(0, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=False)
-# f.tight_layout()
+draw_observations(0, X, np.array([(float("nan"), float("nan"))]), Ls, Ytarget, A, B, L, ax1, ax2, draw_model=False)
+f.tight_layout()
 f.savefig(path / "gradient0.png", transparent=True, dpi=300)
 plt.close(f)
 
 files = []
-for step in range(1, 100):
+for step in range(1, 101):
     file_name = path / f"gradient{step}.png"
-    f, ax1, ax2 = create_axes()
-    draw_observations(step, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2)
+    ax1.clear()
+    ax2.clear()
+    draw_observations(step-1, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2)
     # f.tight_layout()
     f.savefig(file_name, transparent=True, dpi=300)
     print(file_name)
@@ -137,9 +149,9 @@ for step in range(1, 100):
 #         image = imageio.imread(filename)
 #         writer.append_data(image)
 
-image = PIL.Image.open(path / "gradient0.png").convert('P')
-images = [image] * 10 + [PIL.Image.open(file).convert('P') for file in files]
-image.save(path / 'gradient_descent.gif', save_all=True, append_images=images, loop=0, duration=12, transparency=0, disposal=2)
+image = PIL.Image.open(path / "gradient0.png")
+images = [image] * 9 + [PIL.Image.open(file) for file in files]
+image.save(path / 'gradient_descent.webp', save_all=True, append_images=images, loop=0, duration=10, disposal=2)
 
 os.remove(path / "gradient0.png")
 for file in files:
