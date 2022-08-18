@@ -138,4 +138,9 @@ The training on the test data give the following results.
 
 ## Feed forward neural network
 
-Feed forward enural networks (also called multi layer perceptron) are a type of neural network that can be used for regression or classification from tabular data.
+Feed forward neural networks (also called multi layer perceptron) are a type of neural network that can be used for regression or classification from tabular data.
+
+![feed forward](images/neural_network/neural_network_explaination.png)
+
+
+![neuron](images/gif_perceptron/perceptron.gif)

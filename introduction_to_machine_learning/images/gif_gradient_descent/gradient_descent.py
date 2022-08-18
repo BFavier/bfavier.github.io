@@ -88,10 +88,10 @@ colors = mpl.cm.Set1.colors
 
 def draw_observations(i, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=True):
     Ypred = model(X, Ps[i])
-    ax1.scatter(X, Ytarget, color=colors[1], marker=".", label="observations")
+    ax1.scatter(X, Ytarget, color=colors[1], marker=".", label="observations", zorder=1)
     if draw_model:
-        ax1.plot(X, Ypred, color=colors[2], label="model")
-        ax1.vlines(X, np.minimum(Ypred, Ytarget), np.maximum(Ypred, Ytarget), color=colors[0], linewidths=0.3)
+        ax1.plot(X, Ypred, color=colors[2], label="model", zorder=2)
+        ax1.vlines(X, np.minimum(Ypred, Ytarget), np.maximum(Ypred, Ytarget), color=colors[0], linewidths=0.5, antialiased=True, zorder=0)
     inf, sup = Ytarget.min(), Ytarget.max()
     delta = sup-inf
     ax1.set_ylim([inf-0.05*delta, sup+0.05*delta])
