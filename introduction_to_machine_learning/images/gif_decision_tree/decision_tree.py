@@ -61,7 +61,7 @@ for i in range(1, 21):
 
 image = PIL.Image.open(files[0]).convert('P')
 images = [PIL.Image.open(file).convert('P') for file in files[1:] + [files[-1]]*4]
-image.save(path / 'decision_tree_regression.gif', save_all=True, append_images=images, loop=0, duration=200, transparency=0, disposal=2)
+image.save(path / 'decision_tree_regression.webp', save_all=True, append_images=images, loop=0, duration=200, transparency=0, disposal=2)
 
 for file in files:
     os.remove(file)
@@ -105,7 +105,7 @@ for i in range(1, 21):
 
 image = PIL.Image.open(files[0]).convert('P')
 images = [PIL.Image.open(file).convert('P') for file in files[1:] + [files[-1]]*4]
-image.save(path / 'decision_tree_classification.gif', save_all=True, append_images=images, loop=0, duration=200, transparency=0, disposal=2)
+image.save(path / 'decision_tree_classification.webp', save_all=True, append_images=images, loop=0, duration=200, transparency=0, disposal=2)
 
 for file in files:
     os.remove(file)

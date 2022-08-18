@@ -90,7 +90,7 @@ And each classification model will be fitted on random sample from two gaussian 
 
 ![target function and observations for classification](images/target_function/classification_target.png)
 
-### linear and polynomial regression
+### Linear and polynomial regression
 
 Linear models are models of the form y = a1 \* x1 + ... + an \* xn + b.
 This include polynomials of any order if we set xi = x^i. Sometimes interaction terms of the form xi\*xj are also added, as well as any custom numerical feature.
@@ -100,13 +100,13 @@ This kind of models have the advantage to have an analytical solution for the pa
 
 Polynomials are in theory universal approximators (see Lagrange polynomial interpolation). In practice they generalize poorly to new data, especially with high polynomial orders. And as illustrated below its expressive power scales poorly with polynomial order. Even for a simple 1D function such has the absolute value. For this reason this kind of models are usualy restricted to linear models or low order polynomials. They are used alone to describe low complexity functions, as piecewise linear function or piecewise polynomials for more complex functions (for example NASA polynomials fitted to describe thermodynamic parameters).
 
-![poor fitting with polynomial](images/gif_v_shape_linear_regression/v_shape.gif)
+![poor fitting with polynomial](images/gif_v_shape_linear_regression/v_shape.webp)
 
 The fitting of our test function gives the following result:
 
 ![polynomial regression](images/polynomial/polynomial_regression.png)
 
-### k nearest neighbours
+### K nearest neighbours
 
 The k nearest neighbours model was invented in 1951 by Joseph Hodges. It is an interpolation method from labeled observations rather than a parametric model. The Y value of a new observation is given by the average (sometime weighted by inverse distance) of the Y of the k closest labeled observations, with the integer k an hyperparameter of the model (usualy 3 or 5). It is an universal approximator by definition if the obsevations are weighted by inverse distance, because then it predicts without any error all the training observations.
 
@@ -120,7 +120,7 @@ The evaluation on test data gives the following results:
 ![knn classification](images/k_nearest_neighbours/k_nearest_classification.png)
 
 
-### decision tree
+### Decision tree
 
 Decision tree are models that consist in successive binary splits of the training data using threshold criterion on input variables. The leafs of the obtained tree are associated to a constant prediction value, either a class for classification or a numerical value for regression. For classification, the class predicted at a leaf is the most frequent class amongst training data in this leaf. For regression, the numerical value predicted at a leaf is the average of the target values amongst training data in this leaf. If we make enough splits, there will be only one training observation in each leaf, which proves that this model is an universal approximator. To avoid reaching this state of overfitting, a maximum number of split can be chosen as an hyper-parameter. Sometimes there are additional stoping criteria such as the maximum depth of the tree, and the minimum number of sample in a leaf to allow the split.
 
@@ -132,10 +132,10 @@ Decision tree have the advantage of needing no data normalization whatsoever, as
 
 The training on the test data give the following results.
 
-![decision tree regression](images/gif_decision_tree/decision_tree_regression.gif)
+![decision tree regression](images/gif_decision_tree/decision_tree_regression.webp)
 
-![decision tree classification](images/gif_decision_tree/decision_tree_classification.gif)
+![decision tree classification](images/gif_decision_tree/decision_tree_classification.webp)
 
-## multilayer perceptrons
+## Feed forward neural network
 
-Multi layer perceptron are a type of neural network that can be used for regression or classification from tabular data.
+Feed forward enural networks (also called multi layer perceptron) are a type of neural network that can be used for regression or classification from tabular data.

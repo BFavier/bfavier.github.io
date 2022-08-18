@@ -56,7 +56,7 @@ for n in range(1, 21):
 
 image = PIL.Image.open(files[0]).convert('P')
 images = [PIL.Image.open(file).convert('P') for file in files[1:] + [files[-1]]*5]
-image.save(path / 'v_shape.gif', save_all=True, append_images=images, loop=0, duration=100, transparency=0, disposal=2)
+image.save(path / 'v_shape.webp', save_all=True, append_images=images, loop=0, duration=100, transparency=0, disposal=2)
 
 for file in files:
     os.remove(file)

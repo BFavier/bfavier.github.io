@@ -26,7 +26,7 @@ X = np.random.normal(0., 0.3, size=(N, 2))
 X_new = np.zeros((1, 2))
 distances = np.sqrt(np.sum((X - X_new)**2, axis=1))
 neighbours = np.argpartition(distances, k)[:k]
-Y = np.random.binomial(1, 0.5, size=N)
+Y = np.array([0 if i < N//2 else 1 for i in range(N)])
 for j, i in enumerate(neighbours):
     Y[i] = 0 if j < k//2 else 1
 colors = mpl.cm.Set1.colors
