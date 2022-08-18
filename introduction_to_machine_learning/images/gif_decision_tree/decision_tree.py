@@ -23,7 +23,8 @@ y = iris.target
 model = tree.DecisionTreeClassifier(max_leaf_nodes=3)
 model.fit(X, y)
 f, ax = plt.subplots(figsize=[5, 5])
-tree.plot_tree(model, ax=ax, feature_names=iris["feature_names"], impurity=False)
+tree.plot_tree(model, ax=ax, feature_names=iris["feature_names"],
+               class_names=iris["target_names"], impurity=False)
 f.tight_layout()
 f.savefig(path / "decision_tree.png", transparent=True, dpi=300)
 
@@ -78,7 +79,8 @@ for i in range(1, 21):
     model = tree.DecisionTreeClassifier(max_leaf_nodes=i+1)
     model.fit(Xobs, Yobs)
     Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
-    tree.plot_tree(model, ax=ax2, impurity=False, feature_names=["X1", "X2"])
+    tree.plot_tree(model, ax=ax2, impurity=False, feature_names=["X1", "X2"], 
+                   class_names=["red", "blue"])
 
     R = Y < 0.5
     B = Y >= 0.5

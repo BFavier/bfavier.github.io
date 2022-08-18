@@ -30,7 +30,7 @@ sys.path.append(str(path.parent))
 from models_data import target, regression_data, classification_data
 
 Xobs, Yobs = regression_data()
-n = 20
+n = 10
 w = fit(Xobs.reshape(-1, 2), Yobs.reshape(-1), n)
 X = np.stack(np.meshgrid(np.linspace(-1, 1, 101), np.linspace(-1, 1, 101)), axis=-1)
 Z = model(X.reshape(-1, 2), w, n).reshape(X.shape[:-1])
