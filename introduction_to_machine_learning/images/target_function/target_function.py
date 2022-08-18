@@ -37,7 +37,7 @@ ax.set_zlabel("Y")
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_zticks([])
-ax.set_title("target observations")
+ax.set_title("sample of observations")
 
 f.tight_layout()
 f.savefig(path / "regression_target.png", transparent=True, dpi=300)
