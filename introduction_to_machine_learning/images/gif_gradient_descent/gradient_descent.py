@@ -97,7 +97,7 @@ def draw_observations(i, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=True)
     ax1.set_ylim([inf-0.05*delta, sup+0.05*delta])
     inf, sup = L.min(), L.max()
     delta = sup-inf
-    ax2.plot_surface(A, B, L, rstride=1, cstride=1, cmap="viridis", zorder=0)
+    ax2.plot_surface(A, B, L, rstride=1, cstride=1, cmap="cividis", zorder=0)
     ax2.view_init(azim=-15)
     a, b = Ps[:i+1].transpose()
     ax2.scatter(a, b, Ls[:i+1], color="k", marker=".", zorder=1, depthshade=False)
