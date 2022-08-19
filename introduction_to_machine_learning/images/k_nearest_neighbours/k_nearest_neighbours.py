@@ -54,9 +54,9 @@ f.savefig(path / "k_nearest_evaluation.png", transparent=True, dpi=300)
 # regression
 
 Xobs, Yobs = regression_data()
-
+k = 5
 X = np.stack(np.meshgrid(np.linspace(-1, 1, 100), np.linspace(-1, 1, 100)), axis=-1)
-Y = model(X.reshape(-1, 2), Xobs, Yobs, k=5).reshape(X.shape[:2])
+Y = model(X.reshape(-1, 2), Xobs, Yobs, k=k).reshape(X.shape[:2])
 
 f = plt.figure(figsize=[5, 5])
 ax = f.add_subplot(111, projection="3d")
@@ -68,7 +68,7 @@ ax.set_zticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.set_zlabel("Y")
-ax.set_title("k nearest neighbours (k=5)")
+ax.set_title(f"k nearest neighbours (k={k})")
 
 f.savefig(path / "k_nearest_regression.png", transparent=True, dpi=300)
 
@@ -79,7 +79,8 @@ Xobs, Yobs = classification_data()
 is_b = Yobs.astype(bool)
 Xa, Xb = Xobs[~is_b], Xobs[is_b]
 X = np.stack(np.meshgrid(np.linspace(-2, 2, 500), np.linspace(-2, 2, 500)), axis=-1)
-Y = model(X.reshape(-1, 2), Xobs, Yobs, k=3).reshape(X.shape[:2])
+k = 5
+Y = model(X.reshape(-1, 2), Xobs, Yobs, k=k).reshape(X.shape[:2])
 
 R = Y < 0.5
 B = Y >= 0.5
@@ -95,7 +96,7 @@ ax.set_xticks([])
 ax.set_yticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
-ax.set_title("k nearest neighbours (k=5)")
+ax.set_title(f"k nearest neighbours (k={k})")
 
 f.savefig(path / "k_nearest_classification.png", transparent=True, dpi=300)
 

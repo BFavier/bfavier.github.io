@@ -140,6 +140,11 @@ The training on the test data give the following results.
 
 ![decision tree classification](images/gif_decision_tree/decision_tree_classification.webp)
 
+
+## Gradient boosting
+
+
+
 ## Feed forward neural network
 
 Feed forward neural networks (also called multi layer perceptron) are a type of neural network that can be used for regression or classification from tabular data, and is usualy trained with gradient descent. It is usualy represented in the following form:
@@ -152,11 +157,9 @@ $$
 X_{i,j} = f \left( b_{i,j} + \sum_k a_{i,k,j} \times X_{i-1,k} \right)
 $$
 
-This is essentially a linear function of the neurons of the previous layer, to which an activation function $f$ is applied. With $f$ chosen non linear, otherwise the whole neural network simplifies to a linear model. The activation function is usually the same for the whole network, excepted for the outputs, which usualy have no activation function unless we want to add some specific constraint to them. For example, in classification, the softmax function is applied to the outputs to convert the values between -inf and +inf to probabilities (between 0 and 1, such that the sum of the outputs is 1). The softmax function takes the exponential of each output (to have strictly positive values) and divide them all by the sum of the exponential of all outputs (so that they sum up to 1). Here below are some usual activation functions
+This is essentially a linear function of the neurons of the previous layer, to which an activation function $f$ is applied. With $f$ chosen non linear, otherwise the whole neural network simplifies to a linear model. The activation function is usually the same for the whole network, excepted for the outputs, which usualy have no activation function unless we want to add some specific constraint to them. For example, in classification, the softmax function is applied to the outputs to convert the values between -inf and +inf to probabilities (between 0 and 1, such that the sum of the outputs is 1). The softmax function takes the exponential of each output (to have strictly positive values) and divide them all by the sum of the exponential of all outputs (so that they sum up to 1). Here below are some usual activation functions. From experience, ReLU is always a good default choice.
 
 ![activation functions](images/neural_network/activation_functions.png)
-
-ReLu is always a good default choice. And tanh and sigmoid are usualy avoided (except for output constraints) as there is only a small range of x for which the derivative of $f$ is not very close to zero. If for most training observations the inputs of $f$ is out of this range, variations of the parameters will have a very small effect on the variations of the neuron values. It hurts the proper training of the model with gradient descent. The affected neurons are "dead neurons" as their parameters nearly won't change. This is much less likely to happen with the other disymetrical activation functions that are linear on at least half of the input range.
 
 Visualizing how a single neuron reacts to modifications of the parameters helps to understand the choice of its mathematical formulation. Let's consider a neuron with two inputs X1 and X2 that we will note $\vec{X}$. The mathematical expression of its output can be equivalently formulated as $y = f\left( (\vec{X} + \vec{b}) \cdot \vec{a}\right)$. If $f$ is the tanh function, the resulting function is a wave in the direction of $\vec{a}$. Modifying the amplitude of $\vec{a}$ changes the slope of the wave. Changing the bias $\vec{b}$ gives a position offset to the wave.
 
@@ -166,12 +169,9 @@ In this two inputs case it is intuitive how a linear combinations (with a bias) 
 
 The feed forward neural networks, like all neural networks, have the advantage of allowing the computation of the loss' gradient with the backpropagation method. The model consists in a composition of differentiable operations. The chain rule of derivatives gives us an expression of the derivative of a composition of functions. If all the intermediate results can be stored in memory, and an analytical solution of the jacobian matrix is known for all intermediate operations, then the gradient can be backpropagated from the loss to all the parameters. This computation time needed for the backpropagation is of the same order of magnitude as the forward pass of the loss evaluation. This makes the training of neural networks very scalable with parameters count.
 
-The fitting of feed forward models with 3 hidden layers of 50 neurons gives the following results on our test datasets:
+The fitting of feed forward models with 3 hidden layers of 50 neurons and tanh activation gives the following results on our test datasets:
 
 ![feed forward regression](images/neural_network/feed_forward_regression.png)
 
 ![feed forward regression](images/neural_network/feed_forward_classification.png)
-
-
-## Gradient boosting
 

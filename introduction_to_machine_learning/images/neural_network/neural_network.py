@@ -204,7 +204,7 @@ ax.set_zticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.set_zlabel("Y")
-ax.set_title("feed_forward")
+ax.set_title("feed forward")
 
 f.savefig(path / "feed_forward_regression.png", transparent=True, dpi=300)
 
