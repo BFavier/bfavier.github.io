@@ -82,17 +82,35 @@ In this animation, a polynomial of increasing order is fited to a set of trainin
 
 ## Machine learning tasks for tabular data
 
-We will fit each regression model on 1000 noisy observations from the function $y = exp((\frac{x1-0.5}{0.3})^2 + (\frac{x2-0.5}{0.3})^2) - exp((\frac{x1+0.5}{0.3})^2 + (\frac{x2+0.5}{0.3})^2)$
+The most common application of machine learning is to train a model on tabular data. Each row is an observation, each column is an input variable $X_j$ or a target value $Y$. There are two most common tasks on this kind of data: regression and classification. Regression is when the model has to predict a numerical value for each observation, classification is when the model has to predict a class (amongst a fixed set of possible classes) for each observation.
 
-![target function and observations for regression](images/target_function/regression_target.png)
+The usual loss function used for regression is the sum of squared error:
 
-And each classification model will be fitted on random sample from two gaussian distributions:
+$$
+L = \sum_i (Y_i - \hat{Y}_i)^2
+$$
 
-![target function and observations for classification](images/target_function/classification_target.png)
+With $\hat{Y}_i$ the prediction of the model for the $i^{th}$ observation, and $Y_i$ the corresponding target. While for classification, assuming the model yields a probability $\hat{p}_i^c$ for each observation index $i$ and class index $c$, and with $p_i^c$ the target probability (1 if observation $i$ is of class c, 0 otherwise), the usual loss function is the negative log likelyhood (also called cross entropy):
+
+$$
+L = \sum_i \sum_c \left(-\mathrm{log}(\hat{p}_i^c) \times p_i^c \right)
+$$
 
 ## An overview of some commonly used models
 
 In this section we will describe some commonly used machine learning models for application to tabular data.
+
+We will fit each regression model on 1000 noisy observations from the function
+
+$$
+y = \mathrm{exp}\left( \left(\frac{X_1-0.5}{0.3} \right)^2 + \left(\frac{X_2-0.5}{0.3}\right)^2 \right) - \mathrm{exp}\left( \left(\frac{X_1+0.5}{0.3} \right)^2 + \left(\frac{X_2+0.5}{0.3} \right)^2\right)
+$$
+
+![target function and observations for regression](images/target_function/regression_target.png)
+
+And each classification model will be fitted on 500 random samples from each of two gaussian distributions:
+
+![target function and observations for classification](images/target_function/classification_target.png)
 
 ### Linear and polynomial regression
 
@@ -109,6 +127,8 @@ Polynomials are in theory universal approximators (see Lagrange polynomial inter
 The fitting of our test function gives the following result:
 
 ![polynomial regression](images/polynomial/polynomial_regression.png)
+
+There also exist variations of the linear regression which minimize other loss functions. Ridge regression consists in minimizing the sum of squared error plus a coefficient that multiplies the L2 norm (square root of sum of squared components) of the parameters vector (also called L2 penalization). This limits the expressiveness of the model by penalizing high numerical values of weights and bias. The lasso regression replaces the L2 penalization by L1 penalization (L1 norm of the parameters vector: the sum of their absolute values) which tends to give a weight to only the most impactant parameters while the others are penalized towards zero. And finally the Elastic net variation that cumulates L1 and L2 penalization with two different factors. The factors are hyper parameters that needs to be adjusted so that the model best fit the validation data. This type of models are only usefull if the linear model is already overfitting. These penalization terms can be added to the loss of any model. Linear models is the only case where adding a penalization term in the loss changes the usual name of the model.
 
 ### K nearest neighbours
 
@@ -179,3 +199,6 @@ The fitting of feed forward models with 3 hidden layers of 50 neurons and tanh a
 
 ![feed forward regression](images/neural_network/feed_forward_classification.png)
 
+## Variable selection
+
+## Beyond tabular data
