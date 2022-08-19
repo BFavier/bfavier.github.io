@@ -41,7 +41,7 @@ y = np.abs(x)
 files = []
 
 f, ax = plt.subplots(figsize=[5, 5])
-for n in range(1, 21):
+for n in range(2, 21):
     ax.clear()
     w = fit(x, y, n)
     ax.plot(x, y, linestyle="-", color="k", label="target")

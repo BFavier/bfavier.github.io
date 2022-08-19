@@ -118,7 +118,7 @@ def draw_observations(i, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2, draw_model=True)
 Ra, Rb = np.abs(Ps - Ps[-1:]).max(axis=0)
 a_bounds = (Ps[-1][0] - Ra, Ps[-1][0] + Ra)
 b_bounds = (Ps[-1][1] - Rb, Ps[-1][1] + Rb)
-A, B = np.meshgrid(np.linspace(a_bounds[0], a_bounds[1], 30), np.linspace(b_bounds[0], b_bounds[1], 30))
+A, B = np.meshgrid(np.linspace(a_bounds[0], a_bounds[1], 100), np.linspace(b_bounds[0], b_bounds[1], 100))
 L = np.array([loss(model(X, P), Ytarget) for P in np.stack([A.reshape(-1), B.reshape(-1)], axis=1)]).reshape(A.shape)
 
 f, ax1, ax2 = create_axes()

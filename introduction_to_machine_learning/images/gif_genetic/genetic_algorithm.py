@@ -117,7 +117,7 @@ def create_axes():
 
 def draw_observations(ax):
     ax.scatter(Xobs[0], Xobs[1], Ytarget, marker=".", zorder=0,
-               c=Ytarget, cmap="viridis", vmin=inf, vmax=sup)
+               c=Ytarget, cmap="copper", vmin=inf, vmax=sup)
     ax.set_xlabel("$X_1$")
     ax.set_ylabel("$X_2$")
     ax.set_zlabel("Y")
@@ -160,7 +160,7 @@ for step in range(1, 101):
     Ypred = model(Xgrid, P0)
     l = loss(model(Xobs, P0), Ytarget)[0]
     ax.plot_surface(Xgrid[0], Xgrid[1], Ypred[0],
-                    rstride=1, cstride=1, cmap="viridis", vmin=inf, vmax=sup, zorder=1)
+                    rstride=1, cstride=1, cmap="copper", vmin=inf, vmax=sup, zorder=1)
     ax.set_xlabel("$X_1$")
     ax.set_ylabel("$X_2$")
     ax.set_zlabel("Y")
