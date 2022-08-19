@@ -166,6 +166,12 @@ In this two inputs case it is intuitive how a linear combinations (with a bias) 
 
 The feed forward neural networks, like all neural networks, have the advantage of allowing the computation of the loss' gradient with the backpropagation method. The model consists in a composition of differentiable operations. The chain rule of derivatives gives us an expression of the derivative of a composition of functions. If all the intermediate results can be stored in memory, and an analytical solution of the jacobian matrix is known for all intermediate operations, then the gradient can be backpropagated from the loss to all the parameters. This computation time needed for the backpropagation is of the same order of magnitude as the forward pass of the loss evaluation. This makes the training of neural networks very scalable with parameters count.
 
-The fitting of feed forward models on our test datasets gives the following results:
+The fitting of feed forward models with 3 hidden layers of 50 neurons gives the following results on our test datasets:
 
+![feed forward regression](images/neural_network/feed_forward_regression.png)
+
+![feed forward regression](images/neural_network/feed_forward_classification.png)
+
+
+## Gradient boosting
 

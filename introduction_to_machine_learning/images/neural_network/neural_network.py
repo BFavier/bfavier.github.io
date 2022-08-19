@@ -5,6 +5,7 @@ import pathlib
 import IPython
 import matplotlib as mpl
 import torch
+import torch.nn.functional as F
 import itertools
 import PIL
 import os
@@ -137,8 +138,9 @@ for file in files:
 class Layer(torch.nn.Module):
 
     def __init__(self, in_features: int, out_features: int):
+        super().__init__()
         self.linear = torch.nn.Linear(in_features, out_features)
-        self.activation = torch.relu
+        self.activation = torch.tanh
     
     def forward(self, X):
         return self.activation(self.linear(X))
@@ -146,13 +148,51 @@ class Layer(torch.nn.Module):
 
 class Model(torch.nn.Module):
 
-    def __init__(self):
+    def __init__(self, n_hidden: int, n_neurons: int):
         super().__init__()
+        self.layers = torch.nn.ModuleList()
+        in_features = 2
+        for _ in range(n_hidden):
+            out_features = n_neurons
+            self.layers.append(Layer(in_features, out_features))
+            in_features = out_features
+        self.output = torch.nn.Linear(out_features, 1)
+
+    def x_as_tensor(self, X: np.ndarray) -> torch.Tensor:
+        return torch.tensor(X, dtype=torch.float)
+    
+    def y_as_tensor(self, Y: np.ndarray) -> torch.Tensor:
+        return self.x_as_tensor(Y)
+
+    def forward(self, X: torch.Tensor) -> torch.Tensor:
+        for layer in self.layers:
+            X = layer(X)
+        X = self.output(X)
+        return X.reshape(-1)
+    
+    def loss(self, X: torch.Tensor, Y: torch.Tensor) -> torch.Tensor:
+        return F.mse_loss(self(X), Y)
+    
+    def fit(self, X: np.ndarray, Y: np.ndarray):
+        X, Y = self.x_as_tensor(X), self.y_as_tensor(Y)
+        optimizer = torch.optim.Adam(self.parameters(), lr=1.0E-3)
+        for i in range(1000):
+            optimizer.zero_grad()
+            loss = self.loss(X, Y)
+            loss.backward()
+            print(loss.item())
+            optimizer.step()
+    
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        with torch.no_grad():
+            return self(self.x_as_tensor(X)).detach().numpy()
 
 Xobs, Yobs = regression_data()
 
+model = Model(3, 50)
+model.fit(Xobs, Yobs)
 X = np.stack(np.meshgrid(np.linspace(-1, 1, 100), np.linspace(-1, 1, 100)), axis=-1)
-Y = model(X.reshape(-1, 2), Xobs, Yobs, k=5).reshape(X.shape[:2])
+Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
 
 f = plt.figure(figsize=[5, 5])
 ax = f.add_subplot(111, projection="3d")
@@ -164,18 +204,32 @@ ax.set_zticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.set_zlabel("Y")
-ax.set_title("k nearest neighbours (k=5)")
+ax.set_title("feed_forward")
 
-f.savefig(path / "k_nearest_regression.png", transparent=True, dpi=300)
+f.savefig(path / "feed_forward_regression.png", transparent=True, dpi=300)
 
 # classification
+
+class ClassifierModel(Model):
+
+    def forward(self, X: torch.Tensor) -> torch.Tensor:
+        return torch.sigmoid(super().forward(X))
+    
+    def loss(self, X: torch.Tensor, Y: torch.Tensor) -> torch.Tensor:
+        return F.binary_cross_entropy(self(X), Y)
+    
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        with torch.no_grad():
+            return self(self.x_as_tensor(X)).detach().numpy() > 0.5
 
 f, ax = plt.subplots(figsize=[5, 5])
 Xobs, Yobs = classification_data()
 is_b = Yobs.astype(bool)
 Xa, Xb = Xobs[~is_b], Xobs[is_b]
+model = ClassifierModel(3, 50)
+model.fit(Xobs, Yobs)
 X = np.stack(np.meshgrid(np.linspace(-2, 2, 500), np.linspace(-2, 2, 500)), axis=-1)
-Y = model(X.reshape(-1, 2), Xobs, Yobs, k=3).reshape(X.shape[:2])
+Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
 
 R = Y < 0.5
 B = Y >= 0.5
@@ -191,7 +245,7 @@ ax.set_xticks([])
 ax.set_yticks([])
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
-ax.set_title("k nearest neighbours (k=5)")
+ax.set_title("feed forward")
 
-f.savefig(path / "k_nearest_classification.png", transparent=True, dpi=300)
+f.savefig(path / "feed_forward_classification.png", transparent=True, dpi=300)
 
