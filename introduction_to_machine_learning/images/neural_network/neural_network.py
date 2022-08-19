@@ -133,6 +133,22 @@ for file in files:
 
 # regression
 
+
+class Layer(torch.nn.Module):
+
+    def __init__(self, in_features: int, out_features: int):
+        self.linear = torch.nn.Linear(in_features, out_features)
+        self.activation = torch.relu
+    
+    def forward(self, X):
+        return self.activation(self.linear(X))
+
+
+class Model(torch.nn.Module):
+
+    def __init__(self):
+        super().__init__()
+
 Xobs, Yobs = regression_data()
 
 X = np.stack(np.meshgrid(np.linspace(-1, 1, 100), np.linspace(-1, 1, 100)), axis=-1)
