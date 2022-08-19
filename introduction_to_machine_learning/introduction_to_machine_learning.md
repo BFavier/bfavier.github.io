@@ -143,7 +143,11 @@ The training on the test data give the following results.
 
 ## Gradient boosting
 
+![gradient boosting](images/gradient_boosting/gradient_boosting.png)
 
+![gradient boosting regression](images/gradient_boosting/gradient_boosting_regression.webp)
+
+![gradient boosting clasification](images/gradient_boosting/gradient_boosting_classification.webp)
 
 ## Feed forward neural network
 
