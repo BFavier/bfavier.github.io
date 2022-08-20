@@ -261,3 +261,4 @@ For classification it can be usefull to plot a confusion matrix. The row index i
 
 ## Variables selection
 
+One last hyperparameters that we did not discuss yet, and that is common to all models is the subset of variables to use as inputs for the model. Usually the choice of the variable depends on the field of application of the model.
