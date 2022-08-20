@@ -38,9 +38,7 @@ For some specific cases, the sum of squared errors admits a single minimum and n
 
 ## Numerical optimization
 
-Because it is not always possible analyticaly, optimization algorithms aim at finding numericaly the minimum of a function (often only a local minimum) in as few function evaluations as possible.
-
-Under the heavy influence of numerical optimization in economics modeling, this function that we want to minimize is called the loss function or sometimes cost function.
+Because it is not always possible analyticaly, optimization algorithms aim at finding numericaly the minimum of a function (often only a local minimum) in as few evaluations as possible. Under the heavy influence of numerical optimization in economics modeling, this function that we want to minimize is called the loss function or sometimes cost function.
 
 ### Gradient descent algorithm
 
@@ -57,7 +55,7 @@ Idealy an analytical expression of the gradient should be used, otherwise the de
 
 The scale of the parameters is important for this algorithm. If the optimal parameters have different orders of magnitude, the learning rate might be too big for small parameters (oscilate around the optimum value) or too small for the big parameters (the parameters will take a prohibitively long number of steps to reach a satisfying value). In an atempt to give the same order of magnitude to the parameters, the inputs are often normalized to all have the same order of magnitude. Sometimes intermediate results are normalized as well, especially in deep learning. Some variations of the gradient descent, such as the Adam algorithm, try to mitigate this scaling issue by adaptatively scaling the gradient's vector components.
 
-Additionaly it is to be noted that this algorithm might not find a solution close to the global minimum of the loss function as it might get stuck in a bassin: a local minimum. For this reason this algorithm might find a different solution depending on initialization of the parameters. There are variations of the gradient descent algorithm that aims at beeing robust to these local minimum, such as the bassin-hoping algorithm, or adding momentum. However in machine learning the canonicaly used models are well behaved numericaly and local minima usualy have performance nearly equal to the global minimum. For this reason the random initialization doesn't matter in practice.
+Additionaly it is to be noted that this algorithm might not find a solution close to the global minimum of the loss function as it might get stuck in a bassin: a local minimum. For this reason this algorithm might find a different solution depending on initialization of the parameters. There are variations of the gradient descent algorithm that aims at beeing robust to these local minimum, such as the bassin-hoping algorithm, or adding momentum to the gradient descent. However in machine learning the most used models are well behaved numericaly and local minima usualy have performance nearly equal to the global minimum. For this reason the random initialization doesn't matter in practice.
 
 ### Genetic algorithm
 
@@ -72,13 +70,19 @@ This algorithm is less often used than gradient descent because it usually requi
 
 ## Universal approximators and overfiting
 
-Thanks to numerical optimization we can fit any parametric model to observations. However finding an adequate mathematical model for each practical case would be an inefficient approach. Some universal approximators (parametric models that can approximate any function on a finite set of points by as close as wanted) are used instead. Usualy, the number of parameters of these models can be adjusted, and increasing the number of parameters increases the expressive power of these models.
+Thanks to numerical optimization we can fit any parametric model to observations. However finding an adequate mathematical model for each practical case would be an inefficient approach. Some universal approximators (parametric models that can approximate any function on a finite set of points by as closely as wanted) are used instead. Usualy, the number of parameters of these models can be adjusted, and increasing the number of parameters increases the expressive power of these models.
 
-Setting the number of parameters too low might hurt expresiveness of the model, and as such the model might underperform. Setting the number of parameters too high, in addition to hurt computation speed, might also give the model an excess of expressive power. Which might hurt generalization capability of the model because it learns noise of a sample and not a general trend in the data. This is called overfitting. The parameters that are chosen once and not changed during fitting, such as the number of parameters, are called hyper-parameters of the model.
+Beeing able to adjust the expressive power of the model is an advantage. Having too much expressive power can hurt generalization capability of the model. Because the model learns noise specific to the training data sample and not a general trend in the data. This is called overfitting. 
 
 ![overfitting with polynomial](images/gif_lagrange_polynome_interpolation/Lagrange_polynomial_interpolation.webp)
 
-In this animation, a polynomial of increasing order is fited to a set of training data. Another set of data called the test data is put aside an not used during training. The performance of the model can be evaluated on the test data, which is representative of the real performance of the model on unseen data. We can see that a more expressive model doesn't always mean a better model. Hyper-parameters are often adjusted manually until finding satisfactory results as it is often too costly to train a high number of models.
+In this animation, a polynomial of increasing order is fited to a set of training data. Another set of data called the test data is put aside an not used during training. The performance of the model can be evaluated on the test data, which is representative of the performance of the model on new data points. As we can see the higher the polynomial's order, the better is the loss on the training data. However, at one point, the model ends up performing worse than before on the test data.
+
+The standard practice is to shuffle all available data and to split them in two groups: train data and test data. Usualy the number of test data are chosen as 20% of the total. The train dataset is used to train the model, and the test dataset is used to compare several types of models between them and to report on performances. For time series where samples close from each other in the time line are likely to be highly correlated, the data are not shuffled.
+
+The evaluation of the performance on the test set will likely vary from one random split to another. The k-fold method gives a more repeatable evaluation of the performance of the model, but also more computationaly expensive. The data is split in k subsets of data (with k usualy chosen as 3 or 5). The k models are trained separately, each one tested on a different test subset, and trained on the remaining subsets. The 
+
+The parameters that are chosen once and not changed during training (degree of the polynomial, number of iterations of optimization method, ...), are called hyper-parameters of the model. Hyper-parameters are usualy adjusted manually until finding satisfactory results, because exhaustive grid search approaches are too computationaly expensive. The standard practice to choose the value of the hyper parameters is to split the data in a train set and a validation set, in addition to the test set. Models are trained on the train set for several set of hyper parameters. The set of hyperparameters that performs best on the validation set is chosen. Then the performance of the model is evaluated on the test set.
 
 ## Machine learning tasks for tabular data
 
@@ -128,11 +132,17 @@ The fitting of our test function gives the following result:
 
 ![polynomial regression](images/polynomial/polynomial_regression.png)
 
-There also exist variations of the linear regression which minimize other loss functions. Ridge regression consists in minimizing the sum of squared error plus a coefficient that multiplies the L2 norm (square root of sum of squared components) of the parameters vector (also called L2 penalization). This limits the expressiveness of the model by penalizing high numerical values of weights and bias. The lasso regression replaces the L2 penalization by L1 penalization (L1 norm of the parameters vector: the sum of their absolute values) which tends to give a weight to only the most impactant parameters while the others are penalized towards zero. And finally the Elastic net variation that cumulates L1 and L2 penalization with two different factors. The factors are hyper parameters that needs to be adjusted so that the model best fit the validation data. This type of models are only usefull if the linear model is already overfitting. These penalization terms can be added to the loss of any model. Linear models is the only case where adding a penalization term in the loss changes the usual name of the model.
+There also exist variations of the linear regression which minimize other loss functions. Ridge regression consists in minimizing the sum of squared error plus a chosen positive factor that multiplies the L2 norm (euclidian norm) of the parameters vector (also called L2 penalization). This tends to reduce the expressiveness of the model by scaling down towards zero all weights and bias equaly. The lasso regression replaces the L2 penalization by L1 penalization (L1 norm of the parameters vector: the sum of their absolute values) which tends to penalize towards zero the weigt of the less impactant variables. And finally the Elastic net variation that cumulates L1 and L2 penalization with two different multiplying factors.
+
+$$
+L = \alpha \times \left\lVert \vec{P} \right\rVert_{1} + \beta \times \left\lVert \vec{P} \right\rVert_{2} + \sum_i (Y_i - \hat{Y}_i)^2
+$$
+
+The multiplying factors $\alpha$ and $\beta$ in the loss are hyper parameters that need to be adjusted so that the model best fit the validation data. These types of models are more robust against outlayers than standard least square regression. As all penalization terms, it is a tradeoff of model expressiveness for generaliation power. These penalization terms can be added to the loss of any model.
 
 ### K nearest neighbours
 
-The k nearest neighbours model was invented in 1951 by Joseph Hodges. It is an interpolation method from labeled observations rather than a parametric model. The Y value of a new observation is given by the average (sometime weighted by inverse distance) of the Y of the k closest labeled observations, with the integer k an hyperparameter of the model (usualy 3 or 5). It is an universal approximator by definition if the obsevations are weighted by inverse distance, because then it predicts without any error all the training observations.
+The k nearest neighbours model was invented in 1951 by Joseph Hodges. It is an interpolation method from labeled observations rather than a parametric model. The Y value of a new observation is given by the average (sometime weighted by inverse distance) of the Y of the k closest labeled observations, with the integer k an hyperparameter of the model (usualy 3 or 5). It is an universal approximator by definition if the obsevations are weighted by inverse distance or if k is 1, because then it predicts without any error all the training observations.
 
 ![knn evaluation](images/k_nearest_neighbours/k_nearest_evaluation.png)
 
@@ -163,7 +173,45 @@ The training on the test data give the following results.
 
 ## Gradient boosting
 
+Gradient boosting was first publicated by Jerome H Friedman in *Greedy Function Approximation: A Gradient Boosting Machine* in 1999.
+
+The general idea behind gradient boosting regression is to define a model that is a sum of shallow decision tree regressors. The sequence of decision tree is extended by training a new decision tree with as target the error of the gradient boosting model at the previous step. Thus it gradually corrects its own error on the training data as the number of decision trees grow. The resulting model generalizes better to unseen data than a deep decision tree regressor, while remaining an universal approximator.
+
 ![gradient boosting](images/gradient_boosting/gradient_boosting.png)
+
+In practice a scaling factor between 0 and 1 (usualy 0.1) called learning rate is applied to all decision tree predictions. This factor is an hyperparameter and improves generalization power when tuned correctly. Also the model starts from an initial guess $\hat{y}_0$ chosen as the average $y$ of all training observations to speed up training.
+
+This training process can be interpreted as a gradient descent in the function space. The function update can be written as:
+
+$$
+\hat{y}^{n} = \hat{y}^{n-1} + lr \times \hat{\delta}
+$$
+
+with $lr$ the learning rate, and $\hat{\delta}$ an approximation of the function $\delta = (y - \hat{y}^{n-1})$ by a shallow decision tree regressor. The derivative of the sum of squared error loss with regard to the prediction of the model $\hat{y}$ for each observation $\vec{X}_i$ is:
+
+$$
+\frac{\partial L}{\partial \hat{y}(\vec{X}_i)} = \frac{\partial}{\partial \hat{y}(\vec{X}_i)} \left( \sum_j \left( \hat{y}(\vec{X}_j) - y(\vec{X}_j) \right)^2 \right) = -2 \times \left( \hat{y}(\vec{X}_i) - y(\vec{X}_j) \right) = 2 \times \delta ( \vec{X}_i )
+$$
+
+Consequently the function update can be interpreted a gradient descent, with the gradient approximated by a decision tree regressor.
+
+The expression of the update could be derived similarly for other loss functions. Notably, we can build a gradient boosting classifier from several gradient boosting regressors $\hat{y}_c$, and the cross entropy loss. By defining $1_{i \in c}$ the function that evaluates as 1 if the $i^{th}$ observation is in the class $c$ and 0 otherwise, the gradient is expressed as:
+
+$$
+\delta_c \left( \vec{X}_i \right) = -\frac{\partial}{\partial \hat{y}_c(\vec{X}_i)} \left( \sum_j 1_{j \in c} \times - \mathrm{log} \left( \frac{\mathrm{exp} \left( \hat{y}_c(\vec{X}_j) \right)}{\sum_k \mathrm{exp} \left( \hat{y}_k(\vec{X}_j) \right)} \right) \right)
+$$
+
+$$
+\delta_c \left( \vec{X}_i \right) = -\frac{\partial}{\partial \hat{y}_c(\vec{X}_i)} \left( 1_{i \in c} \times \left( \mathrm{log} \left( \sum_k \mathrm{exp} \left( \hat{y}_k(\vec{X}_i) \right) \right) - \hat{y}_c(\vec{X}_i) \right) \right)
+$$
+
+$$
+\delta_c \left( \vec{X}_i \right) = 1_{i \in c} \times \left(1 - \frac{\mathrm{exp} \left( \hat{y}_c(\vec{X}_i) \right)}{\sum_k \mathrm{exp} \left( \hat{y}_k(\vec{X}_i) \right)}\right)
+$$
+
+Hence the update rule for each individual regressor $\hat{y}^n_c = y_c^{n-1} + lr \times \hat{\delta}_c$. With $\hat{\delta}_c$ a decision tree regressor fitted to the residual probability for observations that are part of the class $c$, and zero otherwise. The initial guess $y_c^0$ can be chosen as 0 for all $c$.
+
+The gradient boosting model has all the advantages of the decision tree model excepted for the interpretability. It however usualy performs better. The training of a gradient boosting model on test data gives the following results:
 
 ![gradient boosting regression](images/gradient_boosting/gradient_boosting_regression.webp)
 
@@ -171,7 +219,7 @@ The training on the test data give the following results.
 
 ## Feed forward neural network
 
-Feed forward neural networks (also called multi layer perceptron) are a type of neural network that can be used for regression or classification from tabular data, and is usualy trained with gradient descent. It is usualy represented in the following form:
+Feed forward neural networks (also called multi layer perceptron) are a type of neural network that can be used for regression or classification from tabular data, and is usualy trained with gradient descent. It was first publicated by  McCulloch Warren and Walter Pitts in *A Logical Calculus of Ideas Immanent in Nervous Activity* in 1944. It was originaly intended as a simple biologival model of a brain. It is usualy represented in the following form:
 
 ![feed forward](images/neural_network/neural_network_explaination.png)
 
@@ -193,12 +241,15 @@ In this two inputs case it is intuitive how a linear combinations (with a bias) 
 
 The feed forward neural networks, like all neural networks, have the advantage of allowing the computation of the loss' gradient with the backpropagation method. The model consists in a composition of differentiable operations. The chain rule of derivatives gives us an expression of the derivative of a composition of functions. If all the intermediate results can be stored in memory, and an analytical solution of the jacobian matrix is known for all intermediate operations, then the gradient can be backpropagated from the loss to all the parameters. This computation time needed for the backpropagation is of the same order of magnitude as the forward pass of the loss evaluation. This makes the training of neural networks very scalable with parameters count.
 
-The fitting of feed forward models with 3 hidden layers of 50 neurons and tanh activation gives the following results on our test datasets:
+The fitting of feed forward models with 3 hidden layers of 50 neurons and ReLU activation gives the following results on our test datasets:
 
-![feed forward regression](images/neural_network/feed_forward_regression.png)
+![feed forward regression](images/neural_network/feed_forward_regression.webp)
 
-![feed forward regression](images/neural_network/feed_forward_classification.png)
+![feed forward regression](images/neural_network/feed_forward_classification.webp)
 
-## Variable selection
+## Evaluating and visualizing model performances
 
-## Beyond tabular data
+
+
+## Variables selection
+

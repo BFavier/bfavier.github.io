@@ -53,16 +53,17 @@ f = plt.figure(figsize=[5, 5])
 ax = f.add_subplot(111, projection="3d")
 
 files = []
-for i in range(10, 301, 10):
-    model = ensemble.GradientBoostingRegressor(n_estimators=i, max_depth=100, max_leaf_nodes=3)
+for i in [1]+list(range(10, 301, 10)):
+    model = ensemble.GradientBoostingRegressor(n_estimators=i, max_depth=100, max_leaf_nodes=3, learning_rate=0.2)
     model.fit(Xobs, Yobs)
     Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
 
     ax.clear()
-    ax.plot_surface(X[..., 0], X[..., 1], Y, rstride=1, cstride=1, cmap="viridis", zorder=0)
+    ax.plot_surface(X[..., 0], X[..., 1], Y, rstride=1, cstride=1, cmap="viridis", zorder=0, vmin=-1, vmax=1.)
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_zticks([])
+    ax.set_zlim([-1, 1])
     ax.set_xlabel("X1")
     ax.set_ylabel("X2")
     ax.set_zlabel("Y")
@@ -88,8 +89,8 @@ f = plt.figure(figsize=[5, 5])
 ax = f.add_subplot(111)
 
 files = []
-for i in range(10, 301, 10):
-    model = ensemble.GradientBoostingClassifier(n_estimators=i, learning_rate=0.05, max_depth=100, max_leaf_nodes=5)
+for i in [1]+list(range(10, 301, 10)):
+    model = ensemble.GradientBoostingClassifier(n_estimators=i, learning_rate=0.2, max_depth=100, max_leaf_nodes=3)
     model.fit(Xobs, Yobs)
     Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
 

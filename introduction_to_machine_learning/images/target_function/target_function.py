@@ -18,19 +18,20 @@ X = np.stack(np.meshgrid(np.linspace(-1, 1, 101), np.linspace(-1, 1, 101)), axis
 Z = target(X)
 
 ax = f.add_subplot(121, projection='3d', computed_zorder=False)
-ax.plot_surface(X[..., 0], X[..., 1], Z, rstride=1, cstride=1, cmap="viridis")
+ax.plot_surface(X[..., 0], X[..., 1], Z, rstride=1, cstride=1, cmap="viridis", vmin=-1, vmax=1)
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.set_zlabel("Y")
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_zticks([])
+ax.set_zlim([-1, 1])
 ax.set_title("target function")
 
 # scatter
 Xobs, Zobs = regression_data()
 ax = f.add_subplot(122, projection="3d")
-ax.scatter(Xobs[..., 0], Xobs[..., 1], Zobs, c=Zobs, marker=".", cmap="viridis")
+ax.scatter(Xobs[..., 0], Xobs[..., 1], Zobs, c=Zobs, marker=".", cmap="viridis", vmin=-1, vmax=1)
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.set_zlabel("Y")

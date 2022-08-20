@@ -45,10 +45,11 @@ for i in range(1, 21):
     tree.plot_tree(model, ax=ax2, impurity=False, feature_names=["X1", "X2"])
 
     ax.clear()
-    ax.plot_surface(X[..., 0], X[..., 1], Y, rstride=1, cstride=1, cmap="viridis", zorder=0)
+    ax.plot_surface(X[..., 0], X[..., 1], Y, rstride=1, cstride=1, cmap="viridis", zorder=0, vmin=-1, vmax=1)
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_zticks([])
+    ax.set_zlim([-1, 1])
     ax.set_xlabel("X1")
     ax.set_ylabel("X2")
     ax.set_zlabel("Y")

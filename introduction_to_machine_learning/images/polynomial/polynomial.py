@@ -30,17 +30,18 @@ sys.path.append(str(path.parent))
 from models_data import target, regression_data, classification_data
 
 Xobs, Yobs = regression_data()
-n = 10
+n = 20
 w = fit(Xobs.reshape(-1, 2), Yobs.reshape(-1), n)
 X = np.stack(np.meshgrid(np.linspace(-1, 1, 101), np.linspace(-1, 1, 101)), axis=-1)
 Z = model(X.reshape(-1, 2), w, n).reshape(X.shape[:-1])
 
 f = plt.figure(figsize=[5, 5])
 ax = f.add_subplot(111, projection='3d', computed_zorder=False)
-ax.plot_surface(X[..., 0], X[..., 1], Z, rstride=1, cstride=1, cmap="viridis")
+ax.plot_surface(X[..., 0], X[..., 1], Z, rstride=1, cstride=1, cmap="viridis", vmin=-1, vmax=1)
 ax.set_xlabel("X1")
 ax.set_ylabel("X2")
 ax.set_zlabel("Y")
+ax.set_zlim([-1, 1])
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_zticks([])

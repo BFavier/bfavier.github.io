@@ -140,7 +140,7 @@ class Layer(torch.nn.Module):
     def __init__(self, in_features: int, out_features: int):
         super().__init__()
         self.linear = torch.nn.Linear(in_features, out_features)
-        self.activation = torch.tanh
+        self.activation = torch.relu
     
     def forward(self, X):
         return self.activation(self.linear(X))
@@ -173,40 +173,50 @@ class Model(torch.nn.Module):
     def loss(self, X: torch.Tensor, Y: torch.Tensor) -> torch.Tensor:
         return F.mse_loss(self(X), Y)
     
-    def fit(self, X: np.ndarray, Y: np.ndarray):
-        X, Y = self.x_as_tensor(X), self.y_as_tensor(Y)
-        optimizer = torch.optim.Adam(self.parameters(), lr=1.0E-3)
-        for i in range(1000):
-            optimizer.zero_grad()
-            loss = self.loss(X, Y)
-            loss.backward()
-            print(loss.item())
-            optimizer.step()
-    
     def predict(self, X: np.ndarray) -> np.ndarray:
         with torch.no_grad():
             return self(self.x_as_tensor(X)).detach().numpy()
 
-Xobs, Yobs = regression_data()
-
 model = Model(3, 50)
-model.fit(Xobs, Yobs)
+
+Xobs, Yobs = regression_data()
+Xobs, Yobs = model.x_as_tensor(Xobs), model.y_as_tensor(Yobs)
 X = np.stack(np.meshgrid(np.linspace(-1, 1, 100), np.linspace(-1, 1, 100)), axis=-1)
-Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
 
 f = plt.figure(figsize=[5, 5])
 ax = f.add_subplot(111, projection="3d")
 
-ax.plot_surface(X[..., 0], X[..., 1], Y, rstride=1, cstride=1, cmap="viridis", zorder=0)
-ax.set_xticks([])
-ax.set_yticks([])
-ax.set_zticks([])
-ax.set_xlabel("X1")
-ax.set_ylabel("X2")
-ax.set_zlabel("Y")
-ax.set_title("feed forward")
+files = []
+optimizer = torch.optim.Adam(model.parameters(), lr=1.0E-3)
+for i in range(0, 301):
+    if i % 10 == 0:
+        ax.clear()
+        Y = model.predict(model.x_as_tensor(X.reshape(-1, 2))).reshape(X.shape[:2])
+        ax.plot_surface(X[..., 0], X[..., 1], Y, rstride=1, cstride=1, cmap="viridis", zorder=0, vmin=-1, vmax=1)
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_zticks([])
+        ax.set_xlabel("X1")
+        ax.set_ylabel("X2")
+        ax.set_zlabel("Y")
+        ax.set_zlim([-1, 1])
+        ax.set_title(f"feed forward (iteration {i})")
+        file_name = path / f"ff{i}.png"
+        f.savefig(file_name, transparent=True, dpi=300)
+        files.append(file_name)
+    model.train()
+    optimizer.zero_grad()
+    loss = model.loss(Xobs, Yobs)
+    loss.backward()
+    print(loss.item())
+    optimizer.step()
 
-f.savefig(path / "feed_forward_regression.png", transparent=True, dpi=300)
+image = PIL.Image.open(files[0]).convert('P')
+images = [PIL.Image.open(file).convert('P') for file in files[1:] + [files[-1]]*4]
+image.save(path / 'feed_forward_regression.webp', save_all=True, append_images=images, loop=0, duration=200, transparency=0, disposal=2)
+
+for file in files:
+    os.remove(file)
 
 # classification
 
@@ -222,30 +232,48 @@ class ClassifierModel(Model):
         with torch.no_grad():
             return self(self.x_as_tensor(X)).detach().numpy() > 0.5
 
-f, ax = plt.subplots(figsize=[5, 5])
-Xobs, Yobs = classification_data()
-is_b = Yobs.astype(bool)
-Xa, Xb = Xobs[~is_b], Xobs[is_b]
 model = ClassifierModel(3, 50)
-model.fit(Xobs, Yobs)
+Xobs, Yobs = classification_data()
+Xobs, Yobs = model.x_as_tensor(Xobs), model.y_as_tensor(Yobs)
 X = np.stack(np.meshgrid(np.linspace(-2, 2, 500), np.linspace(-2, 2, 500)), axis=-1)
-Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
 
-R = Y < 0.5
-B = Y >= 0.5
-G = np.zeros(Y.shape)
-image = np.stack([R, G, B], axis=-1)
-image = (image * 55 + [[[200, 200, 200]]]).astype("uint8")
+f = plt.figure(figsize=[5, 5])
+ax = f.add_subplot(111)
 
-ax.imshow(image, extent=(-2, 2, -2, 2), origin="lower")
-ax.scatter(Xobs[..., 0], Xobs[..., 1], c=[mpl.cm.Set1.colors[int(i)] for i in Yobs], marker=".")
-ax.set_xlim([-2, 2])
-ax.set_ylim([-2, 2])
-ax.set_xticks([])
-ax.set_yticks([])
-ax.set_xlabel("X1")
-ax.set_ylabel("X2")
-ax.set_title("feed forward")
+files = []
+optimizer = torch.optim.Adam(model.parameters(), lr=1.0E-3)
+for i in range(0, 301):
+    if i % 10 == 0:
+        ax.clear()
+        Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
+        R = Y < 0.5
+        B = Y >= 0.5
+        G = np.zeros(Y.shape)
+        image = np.stack([R, G, B], axis=-1)
+        image = (image * 55 + [[[200, 200, 200]]]).astype("uint8")
+        ax.imshow(image, extent=(-2, 2, -2, 2), origin="lower")
+        ax.scatter(Xobs[..., 0], Xobs[..., 1], c=[mpl.cm.Set1.colors[int(i)] for i in Yobs], marker=".")
+        ax.set_xlim([-2, 2])
+        ax.set_ylim([-2, 2])
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ax.set_xlabel("X1")
+        ax.set_ylabel("X2")
+        ax.set_title(f"feed forward (iteration {i})")
+        file_name = path / f"ff{i}.png"
+        f.savefig(file_name, transparent=True, dpi=300)
+        files.append(file_name)
+    model.train()
+    optimizer.zero_grad()
+    loss = model.loss(Xobs, Yobs)
+    loss.backward()
+    print(loss.item())
+    optimizer.step()
 
-f.savefig(path / "feed_forward_classification.png", transparent=True, dpi=300)
+image = PIL.Image.open(files[0]).convert('P')
+images = [PIL.Image.open(file).convert('P') for file in files[1:] + [files[-1]]*4]
+image.save(path / 'feed_forward_classification.webp', save_all=True, append_images=images, loop=0, duration=200, transparency=0, disposal=2)
+
+for file in files:
+    os.remove(file)
 
