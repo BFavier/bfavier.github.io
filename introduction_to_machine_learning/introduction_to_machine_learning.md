@@ -100,6 +100,8 @@ $$
 L = \sum_i \sum_c \left(-\mathrm{log}(\hat{p}_i^c) \times p_i^c \right)
 $$
 
+In addition, sometimes some class weighting is added to this loss to counteract the bias induced by class imbalance.
+
 ## An overview of some commonly used models
 
 In this section we will describe some commonly used machine learning models for application to tabular data.
@@ -184,29 +186,29 @@ In practice a scaling factor between 0 and 1 (usualy 0.1) called learning rate i
 This training process can be interpreted as a gradient descent in the function space. The function update can be written as:
 
 $$
-\hat{y}^{n} = \hat{y}^{n-1} + lr \times \hat{\delta}
+\hat{y}^{n} = \hat{y}^{n-1} + lr \times \hat{\delta}^{n-1}
 $$
 
-with $lr$ the learning rate, and $\hat{\delta}$ an approximation of the function $\delta = (y - \hat{y}^{n-1})$ by a shallow decision tree regressor. The derivative of the sum of squared error loss with regard to the prediction of the model $\hat{y}$ for each observation $\vec{X}_i$ is:
+with $lr$ the learning rate, and $\hat{\delta}$ an approximation of the function $\delta = (y - \hat{y})$ by a shallow decision tree regressor. The derivative of the sum of squared error loss with regard to the prediction of the model $\hat{y}_i$ for each observation $i$ is:
 
 $$
-\frac{\partial L}{\partial \hat{y}(\vec{X}_i)} = \frac{\partial}{\partial \hat{y}(\vec{X}_i)} \left( \sum_j \left( \hat{y}(\vec{X}_j) - y(\vec{X}_j) \right)^2 \right) = -2 \times \left( \hat{y}(\vec{X}_i) - y(\vec{X}_j) \right) = 2 \times \delta ( \vec{X}_i )
+\frac{\partial L}{\partial \hat{y}_i} = \frac{\partial}{\partial \hat{y}_i} \left( \sum_j \left( \hat{y}_j - y_j \right)^2 \right) = 2 \times \left( \hat{y}_i - y_j \right) = -2 \times \delta_i
 $$
 
-Consequently the function update can be interpreted a gradient descent, with the gradient approximated by a decision tree regressor.
+Consequently the function update can be interpreted a gradient descent, with minus two times the gradient approximated by a decision tree regressor.
 
 The expression of the update could be derived similarly for other loss functions. Notably, we can build a gradient boosting classifier from several gradient boosting regressors $\hat{y}_c$, and the cross entropy loss. By defining $1_{i \in c}$ the function that evaluates as 1 if the $i^{th}$ observation is in the class $c$ and 0 otherwise, the gradient is expressed as:
 
 $$
-\delta_c \left( \vec{X}_i \right) = -\frac{\partial}{\partial \hat{y}_c(\vec{X}_i)} \left( \sum_j 1_{j \in c} \times - \mathrm{log} \left( \frac{\mathrm{exp} \left( \hat{y}_c(\vec{X}_j) \right)}{\sum_k \mathrm{exp} \left( \hat{y}_k(\vec{X}_j) \right)} \right) \right)
+\delta_{c,i} = -\frac{\partial}{\partial \hat{y}_{c,i}} \left( \sum_j 1_{j \in c} \times - \mathrm{log} \left( \frac{\mathrm{exp} \left( \hat{y}_{c,j} \right)}{\sum_k \mathrm{exp} \left( \hat{y}_{k,j} \right)} \right) \right)
 $$
 
 $$
-\delta_c \left( \vec{X}_i \right) = -\frac{\partial}{\partial \hat{y}_c(\vec{X}_i)} \left( 1_{i \in c} \times \left( \mathrm{log} \left( \sum_k \mathrm{exp} \left( \hat{y}_k(\vec{X}_i) \right) \right) - \hat{y}_c(\vec{X}_i) \right) \right)
+\delta_{c,i} = -\frac{\partial}{\partial \hat{y}_{c,i}} \left( 1_{i \in c} \times \left( \mathrm{log} \left( \sum_k \mathrm{exp} \left( \hat{y}_{k,i} \right) \right) - \hat{y}_{c,i} \right) \right)
 $$
 
 $$
-\delta_c \left( \vec{X}_i \right) = 1_{i \in c} \times \left(1 - \frac{\mathrm{exp} \left( \hat{y}_c(\vec{X}_i) \right)}{\sum_k \mathrm{exp} \left( \hat{y}_k(\vec{X}_i) \right)}\right)
+\delta_{c,i} = 1_{i \in c} \times \left(1 - \frac{\mathrm{exp} \left( \hat{y}_{c,i} \right)}{\sum_k \mathrm{exp} \left( \hat{y}_{k,i} \right)}\right)
 $$
 
 Hence the update rule for each individual regressor $\hat{y}^n_c = y_c^{n-1} + lr \times \hat{\delta}_c$. With $\hat{\delta}_c$ a decision tree regressor fitted to the residual probability for observations that are part of the class $c$, and zero otherwise. The initial guess $y_c^0$ can be chosen as 0 for all $c$.
@@ -249,7 +251,7 @@ The fitting of feed forward models with 3 hidden layers of 50 neurons and ReLU a
 
 ## Visualizing model performances
 
-After training a model it can be usefull to visualize the result of the training to give a qualitative estimation of the model performance and to diagnosis when the model doesn't tran correcly. For regression model it can be usefull to visualize a prediction/target scatter plot. If the model is perfect, all points are on the y=x axis.
+After training a model it can be usefull to visualize the result of the model on test data to give a qualitative estimation of the model performance and to diagnosis when the model didn't train correcly. For regression model it can be usefull to visualize a prediction/target scatter plot. If the model is perfect, all points are on the y=x axis.
 
 ![visualize regression](images/model_performance_visualization/fitting.png)
 
