@@ -228,7 +228,7 @@ Feed forward neural networks (also called multi layer perceptron) are a type of 
 The model is organised in layers. Each circle represents an intermediate numerical value, also called neuron. The blue circles are the input variables. The red circle are the hidden layers' neurons. The green circle is the predicted output. It is possible to have several outputs if several scalars should be predicted at once. For classification for example there is one output neuron per possible target class, and the prediction of the model is the class with the neuron most activated (highest numerical value). The calculations of the neurons' values are done from left to right (hence why it is sometimes called a feed forward neural network). Each neuron is connected to all the neurons of the previous layer by some synapses, indicating that each neuron depend exclusively on all the neurons of the previous layer (hence why it is sometimes called a fully connected neural network). The mathematical expression of a neuron is:
 
 $$
-X_{i,j} = f \left( b_{i,j} + \sum_k a_{i,k,j} \times X_{i-1,k} \right)
+X_{i,j} = f \left( b_{i,j} + \sum_k a_{i,k,j} \times X_{k, j-1} \right)
 $$
 
 This is essentially a linear function of the neurons of the previous layer, to which an activation function $f$ is applied. With $f$ chosen non linear, otherwise the whole neural network simplifies to a linear model. The activation function is usually the same for the whole network, excepted for the outputs, which usualy have no activation function unless we want to add some specific constraint to them. For example, in classification, the softmax function is applied to the outputs to convert the values between -inf and +inf to probabilities (between 0 and 1, such that the sum of the outputs is 1). The softmax function takes the exponential of each output (to have strictly positive values) and divide them all by the sum of the exponential of all outputs (so that they sum up to 1). Here below are some usual activation functions. From experience, ReLU is always a good default choice.
@@ -261,4 +261,6 @@ For classification it can be usefull to plot a confusion matrix. The row index i
 
 ## Variables selection
 
-One last hyperparameters that we did not discuss yet, and that is common to all models is the subset of variables to use as inputs for the model. Usually the choice of the variable depends on the field of application of the model.
+There is one hyperparameter that we did not discuss yet, and that is common to all models: the subset of variables to use as inputs for the model. The choice of the variable depends firstly of our understanding of the context. Only the variables that are supposed to be correlated to predicted target should be included (and only those that we can measure before making a new prediction, for practical reasons).
+
+Sometimes however we are not sure what
