@@ -247,9 +247,15 @@ The fitting of feed forward models with 3 hidden layers of 50 neurons and ReLU a
 
 ![feed forward regression](images/neural_network/feed_forward_classification.webp)
 
-## Evaluating and visualizing model performances
+## Visualizing model performances
 
+After training a model it can be usefull to visualize the result of the training to give a qualitative estimation of the model performance and to diagnosis when the model doesn't tran correcly. For regression model it can be usefull to visualize a prediction/target scatter plot. If the model is perfect, all points are on the y=x axis.
 
+![visualize regression](images/model_performance_visualization/fitting.png)
+
+For classification it can be usefull to plot a confusion matrix. The row index indicates the class predicted by the model, and the columns indicates the target classes. If the prediction is perfect 100% of the predictions should be in the diagonal.
+
+![visualize classification](images/model_performance_visualization/confusion_matrix.png)
 
 ## Variables selection
 
