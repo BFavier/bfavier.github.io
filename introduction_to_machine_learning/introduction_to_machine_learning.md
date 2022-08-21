@@ -259,8 +259,38 @@ For classification it can be usefull to plot a confusion matrix. The row index i
 
 ![visualize classification](images/model_performance_visualization/confusion_matrix.png)
 
-## Variables selection
+For quantitative performance evaluation it is often a good idea to use an intuitive metric in addition to the value of the loss. For regression it is usual to compute an R² metric ($1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{ \textrm{var}(y) }$) or the pair of mean error and standard deviation of error. For classification usual metrics are the accuracy (fraction of good predictions over all observations), the precision (for each target class, number of observations correctly labeled as part of the target class divied by number of observations labeled as part of the target class), the recall (for each target class, number of observations correctly labeled as part of the class divided by number of observations in the target class), and the F1 score ($2\times \frac{\textrm{precision}\times \textrm{recall}}{\textrm{precision} + \textrm{recall}}$).
+
+## Features selection
 
 There is one hyperparameter that we did not discuss yet, and that is common to all models: the subset of variables to use as inputs for the model. The choice of the variable depends firstly of our understanding of the context. Only the variables that are supposed to be correlated to predicted target should be included (and only those that we can measure before making a new prediction, for practical reasons).
 
-Sometimes however we are not sure what
+Sometimes however we are not sure what variables should be included. In this situation, it is recommended to use a feature selection method. Either forward selection: start from n=0 variables, train a model with all combinations of n+1 variables, permanently add the most impactant each time, or backward selection: start from all and remove the least impactant. There should be a stoping criterion on the performance gain/loss. Another feature selection method is to give an impact score to all variables, called feature importance, and to select only the most impactant variables. A feature importance method that works for all types of model is the permutation feature importance. The delta of performance between training the model normaly and training after having a column of inputs shuffled gives the feature importance of the input variable. There are other model specific feature selection methods. For example linear model have probalist interpretation on the significance of each weight/bias under some assumptions. Linear model can also be trained with increasing L1 penalization to see in which order the parameters will faint to zero. Finally gradient boosting and decision trees can give a feature importance for all variables in one training by cumulating for each variable splited on the information gain (variance reduction or cross entropy reduction) of each split.
+
+## Beyond tabular data
+
+In real life applications we sometimes have non tabular data we would like to apply the model on.
+
+### Image analysis
+
+Images for example can be interpreted as tabular data with as many input columns as there are pixels times the number of chanels in the image. However with this approach the model would need to learn independently to recognize the same paterns at eahc position of the image. This would require prohibitively big quantities of training data. For this reason machine learning scientist have been using convolutional filters to extract features from images in a shift invariant manner. Here below an animation taken from [here](https://github.com/vdumoulin/conv_arithmetic) of how convolution of a filter works:
+
+![convolution](images/convolution.gif)
+
+The filter is applied on each chanel of the image separately. The value of each pixel of the image chanel and filter are multiplied by each other and summed to give one pixel of the newly obtained feature map. For application to feature extraction, the maximum value of the feature map is selected. This scalar number represents the feature associated to a filter and a chanel of the image.
+
+The filters can be generated from families of filters such as the Gabor filters, and only a subset of the features will effectively be used by the model after feature selection.
+
+![gabor filter](images/filters/gabor.png)
+
+Nowadays specialised convolutional neural networks are the dominant type of model used in this field of application. Because image analysis requires powerfull model, and neural networks scale very well thanks to parallelization on graphical processing units.
+
+### Text analysis
+
+To convert text of various sizes to tabular data with a fixed number of columns, the usual methodology is to create a bag of word representation. One must define a vocabulary of words that the model will know. The text is then represented as the frequency of each word of the vocabulary in the observation text (often normalized by the frequency of the same word in usual language). Thus the number of features is fixed to the size of the vocabulary, whatever the length of the text. Similarly it is recommended to perform feature selection on this type of tabular data.
+
+Nowadays 1D convolutional neural networks, recurent neural networks and transformers (another type of neural network) are most used for this type of data.
+
+### Time series analysis
+
+Time series are tables of observations and target where the target is supposed to depend on features of the rpevious lines as well. The usual method to convert to tabular data is to copy the input features of previous lines as additional features of the current line, on a limited number lines back. This is equivalent to what a 1D convolutional network does. Missing values (at the start of the time series) should be replaced by a default value or these samples should be discarded.
