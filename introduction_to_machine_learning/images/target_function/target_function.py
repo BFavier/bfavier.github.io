@@ -38,6 +38,7 @@ ax.set_zlabel("Y")
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_zticks([])
+ax.set_zlim([-1, 1])
 ax.set_title("sample of observations")
 
 f.tight_layout()
