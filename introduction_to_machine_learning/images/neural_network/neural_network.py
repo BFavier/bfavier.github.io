@@ -241,7 +241,7 @@ f = plt.figure(figsize=[5, 5])
 ax = f.add_subplot(111)
 
 files = []
-optimizer = torch.optim.Adam(model.parameters(), lr=1.0E-3)
+optimizer = torch.optim.Adam(model.parameters(), lr=1.0E-4)
 for i in range(0, 301):
     if i % 10 == 0:
         ax.clear()
