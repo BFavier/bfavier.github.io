@@ -115,7 +115,7 @@ for i, (theta, ampl, bias) in enumerate(zip(thetas, amplitudes, biases), start=1
     ax3.set_xlabel("X1")
     ax3.set_ylabel("X2")
     ax3.set_zlim([-1, 1])
-    ax3.set_title(r"bias of $b$")
+    ax3.set_title(r"value of bias $\vec{b}$")
     ax3.set_xticks([])
     ax3.set_yticks([])
     ax3.set_zticks([])
