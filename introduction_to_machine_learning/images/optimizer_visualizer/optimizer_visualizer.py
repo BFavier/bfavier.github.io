@@ -55,7 +55,7 @@ h = ax.imshow(Z, extent=(-2, 2, -2, 2), origin="lower", cmap="viridis")
 colors = mpl.cm.Set1.colors
 files = []
 
-for step in range(1, 1001):
+for step in range(0, 1001):
     ax.collections.clear()
     ax.lines.clear()
     for visualizer, color, name in zip(visualizers, colors, methods):
@@ -66,9 +66,10 @@ for step in range(1, 1001):
         else:
             ax.plot(x, y, color=color, linewidth=1., label=name)
     f.legend()
-    file_name = path / f"optimizer{step}.png"
-    f.savefig(file_name, transparent=True, dpi=300)
-    files.append(file_name)
+    if step % 10 == 0:
+        file_name = path / f"optimizer{step}.png"
+        f.savefig(file_name, transparent=True, dpi=300)
+        files.append(file_name)
 
 image = PIL.Image.open(files[0])
 images = [PIL.Image.open(file) for file in files[1:]]
