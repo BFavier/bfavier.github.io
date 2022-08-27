@@ -77,7 +77,7 @@ for epoch in range(100):
 Ps = np.stack(Ps)
 
 def create_axes():
-    fig = plt.figure(figsize=[10, 5])
+    fig = plt.figure(figsize=[11, 5])
     ax1 = fig.add_subplot(121)
     ax2 = fig.add_subplot(122, projection='3d', computed_zorder=False)
     return fig, ax1, ax2
@@ -133,7 +133,6 @@ for step in range(1, 101):
     ax1.clear()
     ax2.clear()
     draw_observations(step-1, X, Ps, Ls, Ytarget, A, B, L, ax1, ax2)
-    # f.tight_layout()
     f.savefig(file_name, transparent=True, dpi=300)
     print(file_name)
     files.append(file_name)
