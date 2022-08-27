@@ -58,10 +58,11 @@ f.savefig(path / "neural_network_explaination.png", transparent=True, dpi=300)
 
 # usual activation functions
 
-x = np.linspace(-4, 4, 1000)
+colors = mpl.cm.tab10.colors
+x = np.linspace(-5, 5, 1000)
 f, axes = plt.subplots(figsize=[15, 10], ncols=3, nrows=2)
-functions = [[("ReLU", lambda x: np.maximum(x, np.zeros(x.shape))), ("ELU", lambda x: np.where(x > 0, x, np.exp(x)-1)), ("GELU", lambda x: x*1/(1+np.exp(-1.702*x)))],
-             [("leaky ReLU", lambda x: np.maximum(x, 0.1*x)), ("tanh", lambda x: np.tanh(x)), ("sigmoid or $\sigma$", lambda x: 1/(1+np.exp(-x))), ]]
+functions = [[("sigmoid or $\sigma$", lambda x: 1/(1+np.exp(-x))), ("tanh", lambda x: np.tanh(x)), ("ReLU", lambda x: np.maximum(x, np.zeros(x.shape)))],
+             [("leaky ReLU", lambda x: np.maximum(x, 0.1*x)), ("ELU", lambda x: np.where(x > 0, x, np.exp(x)-1)), ("GELU", lambda x: x*1/(1+np.exp(-1.702*x)))]]
 counter = itertools.count(0)
 for line, axs in zip(functions, axes):
     for (name, func), ax, i in zip(line, axs, counter):
@@ -71,6 +72,7 @@ for line, axs in zip(functions, axes):
         ax.set_title(name)
         ax.set_xlabel("x")
         ax.set_ylabel("y")
+        ax.set_xlim([-4.1, 4.1])
 f.tight_layout()
 
 f.savefig(path / "activation_functions.png", transparent=True, dpi=300)
