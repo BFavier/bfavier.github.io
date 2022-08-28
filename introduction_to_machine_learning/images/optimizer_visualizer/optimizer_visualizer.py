@@ -1,3 +1,4 @@
+import math
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,24 +13,29 @@ path = pathlib.Path(__file__).parent
 
 class Visualizer(torch.nn.Module):
 
-    def __init__(self, Optimizer: Type[torch.optim.Optimizer], lr: float = 1.0E-2, init: Tuple[float, float] = (-1., -1.)):
+    def __init__(self, Optimizer: Type[torch.optim.Optimizer], init: Tuple[float, float] = (-1., -1.), **kwargs):
         super().__init__()
         self._xy = [init]
-        self.params = torch.nn.parameter.Parameter(torch.tensor(self._xy[0], dtype=torch.float32, requires_grad=True))
-        self.optimizer = Optimizer(self.parameters(), lr=lr)
+        self.P = torch.nn.parameter.Parameter(torch.tensor(self._xy[0], dtype=torch.float32, requires_grad=True))
+        self.optimizer = Optimizer(self.parameters(), **kwargs)
     
     def step(self):
         self.optimizer.zero_grad()
-        x, y = self.params
+        x, y = self.P
         loss = self.loss(x, y)
         loss.backward()
         self.optimizer.step()
-        x, y = self.params.detach().tolist()
+        x, y = self.P.detach().tolist()
         self._xy.append((x, y))
 
     @staticmethod
     def loss(x, y):
-        return 2*x**2-1.05*x**4 + x**6/6 + x*y +y**2
+        if not isinstance(x, torch.Tensor):
+            x = torch.tensor(x)
+        if not isinstance(y, torch.Tensor):
+            y = torch.tensor(y)
+        # return 2*x**2-1.05*x**4 + x**6/6 + x*y +y**2
+        return torch.log(1 + (1.5 - x + x*y)**2 + (2.25 - x + x*y**2)**2 + (2.625 - x + x*y**3)**2)
     
     @property
     def x(self) -> List[float]:
@@ -40,36 +46,40 @@ class Visualizer(torch.nn.Module):
         return [y for _, y in self._xy]
 
 
-x = np.linspace(-2, 2, 300)
-y = np.linspace(-2, 2, 300)
+x = np.linspace(-4.5, 4.5, 300)
+y = np.linspace(-4.5, 4.5, 300)
 X, Y = np.meshgrid(x, y)
 Z = Visualizer.loss(X, Y)
-methods = ["gradient descent", "RMSprop", "Adadelta", "Adagrad", "Adam"]
-visualizers = [Visualizer(opt) for opt in [torch.optim.SGD, torch.optim.RMSprop, torch.optim.Adadelta, torch.optim.Adagrad, torch.optim.Adam]]
+methods = ["gradient descent", "Adagrad", "Adadelta", "RMSprop", "Adam"]
+visualizers = [Visualizer(torch.optim.SGD, lr=1.0E-2), Visualizer(torch.optim.Adagrad, lr=1.0E-1), Visualizer(torch.optim.Adadelta, lr=1.0), Visualizer(torch.optim.RMSprop, lr=1.0E-2), Visualizer(torch.optim.Adam, lr=1.0E-2)]
 
 f, ax = plt.subplots(figsize=[6, 4])
 ax.set_xlabel("x")
 ax.set_ylabel("y")
-h = ax.imshow(Z, extent=(-2, 2, -2, 2), origin="lower", cmap="viridis")
+ax.imshow(Z, extent=(-4.5, 4.5, -4.5, 4.5), origin="lower", cmap="viridis")
+ax.contour(Z, levels=15, colors="w", extent=(-4.5, 4.5, -4.5, 4.5), linewidths=0.1, origin="lower")
+
 
 colors = mpl.cm.Set1.colors
 files = []
 
-for step in range(0, 1001):
-    ax.collections.clear()
-    ax.lines.clear()
-    for visualizer, color, name in zip(visualizers, colors, methods):
-        visualizer.step()
-        x, y = visualizer.x, visualizer.y
-        if len(x) == 1:
-            ax.scatter(x, y, color=color, marker=".", label=name)
-        else:
-            ax.plot(x, y, color=color, linewidth=1., label=name)
-    f.legend()
-    if step % 10 == 0:
-        file_name = path / f"optimizer{step}.png"
-        f.savefig(file_name, transparent=True, dpi=300)
-        files.append(file_name)
+try:
+    for step in range(0, 1001):
+        ax.collections.clear()  # correct me : removes contour
+        for visualizer, color, name in zip(visualizers, colors, methods):
+            visualizer.step()
+            x, y = visualizer.x[-100:], visualizer.y[-100:]
+            ax.scatter(x, y, color=color, marker=".", s=3., label=name, alpha=[math.exp(0.1*(i-len(x))) for i, _ in enumerate(x, start=1)])
+        leg = f.legend()
+        for lh in leg.legendHandles: 
+            lh.set_alpha(1)
+            lh._sizes = [5]  # https://stackoverflow.com/questions/24706125/setting-a-fixed-size-for-points-in-legend
+        if step % 10 == 0:
+            file_name = path / f"optimizer{step}.png"
+            f.savefig(file_name, transparent=True, dpi=300)
+            files.append(file_name)
+except KeyboardInterrupt:
+    pass
 
 image = PIL.Image.open(files[0])
 images = [PIL.Image.open(file) for file in files[1:]]
