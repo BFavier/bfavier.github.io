@@ -51,33 +51,35 @@ y = np.linspace(-4.5, 4.5, 300)
 X, Y = np.meshgrid(x, y)
 Z = Visualizer.loss(X, Y)
 methods = ["gradient descent", "Adagrad", "Adadelta", "RMSprop", "Adam"]
-visualizers = [Visualizer(torch.optim.SGD, lr=1.0E-2), Visualizer(torch.optim.Adagrad, lr=1.0E-1), Visualizer(torch.optim.Adadelta, lr=1.0), Visualizer(torch.optim.RMSprop, lr=1.0E-2), Visualizer(torch.optim.Adam, lr=1.0E-2)]
+visualizers = [Visualizer(torch.optim.SGD, lr=1.0E-2), Visualizer(torch.optim.Adagrad, lr=0.8E-1), Visualizer(torch.optim.Adadelta, lr=1.0, rho=0.8), Visualizer(torch.optim.RMSprop, lr=0.8E-2), Visualizer(torch.optim.Adam, lr=1.0E-2)]
 
-f, ax = plt.subplots(figsize=[6, 4])
-ax.set_xlabel("x")
-ax.set_ylabel("y")
+f, ax = plt.subplots(figsize=[5, 5], gridspec_kw={"left":0, "right": 1, "top": 1, "bottom": 0})
 ax.imshow(Z, extent=(-4.5, 4.5, -4.5, 4.5), origin="lower", cmap="viridis")
 ax.contour(Z, levels=15, colors="w", extent=(-4.5, 4.5, -4.5, 4.5), linewidths=0.1, origin="lower")
 
-
 colors = mpl.cm.Set1.colors
+scatters = []
 files = []
+F = 10
 
 try:
     for step in range(0, 1001):
-        ax.collections.clear()  # correct me : removes contour
-        for visualizer, color, name in zip(visualizers, colors, methods):
-            visualizer.step()
-            x, y = visualizer.x[-100:], visualizer.y[-100:]
-            ax.scatter(x, y, color=color, marker=".", s=3., label=name, alpha=[math.exp(0.1*(i-len(x))) for i, _ in enumerate(x, start=1)])
-        leg = f.legend()
-        for lh in leg.legendHandles: 
-            lh.set_alpha(1)
-            lh._sizes = [5]  # https://stackoverflow.com/questions/24706125/setting-a-fixed-size-for-points-in-legend
-        if step % 10 == 0:
+        # ax.collections.clear()  # correct me : removes contour
+        for h in scatters:
+            h.remove()
+        scatters = []
+        if step % F == 0:
+            for visualizer, color, name in zip(visualizers, colors, methods):
+                x, y = visualizer.x[-100:], visualizer.y[-100:]
+                scatters.append(ax.scatter(x, y, color=color, marker=".", s=3., label=name, alpha=[math.exp(0.1*(i-len(x))) for i, _ in enumerate(x, start=1)]))
+            leg = f.legend(markerscale=2)
+            for lh in leg.legendHandles: 
+                lh.set_alpha(1)
             file_name = path / f"optimizer{step}.png"
             f.savefig(file_name, transparent=True, dpi=300)
             files.append(file_name)
+        for visualizer in visualizers:
+            visualizer.step()
 except KeyboardInterrupt:
     pass
 
