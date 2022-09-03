@@ -4,6 +4,9 @@ import random
 
 
 def generate_errors(df: pd.DataFrame, p: float = 0.1):
+    """
+    generates a copy of the dataframe with introduced errors at the given probability p for each cell
+    """
     columns = ['type_contrat', 'formation_selective',
                'concour', 'nombre_candidats', 'taux_admission', 'taux_femmes',
                'taux_boursiers', 'taux_meme_academie', 'taux_meme_etablissement',
@@ -42,6 +45,9 @@ def generate_errors(df: pd.DataFrame, p: float = 0.1):
     tma = np.minimum((1.15*np.maximum(0, x-0.016))**0.5, 1.)
     copy["taux_meme_academie"] = np.where(np.random(len(df)) < p, tma, copy.taux_meme_academie)
     # taux meme etablissement
+    x = np.random.uniform(0, 1, len(df))
+    tme =  np.maximum(0, 25*x**3 - 52.5*x**2 + 37.5*x -9)
+    copy["taux_meme_etablissement"] = np.where(np.random(len(df)) < p, tme, copy.taux_meme_etablissement)
 
 
 
