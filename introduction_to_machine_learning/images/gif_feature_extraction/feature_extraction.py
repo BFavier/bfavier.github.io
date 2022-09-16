@@ -33,9 +33,10 @@ f, axes = plt.subplots(figsize=[8, 4], ncols=2)
 counter = count()
 files = []
 h, w = image.shape
+dh, dw = filter.shape
 result = np.full((h, w, 4), [int(round(0.5 * 255))] * 3 + [0], dtype="uint8")
-for i in range(h):
-    for j in range(w):
+for i in range(0, h):
+    for j in range(0, w):
         ax1, ax2 = axes
         new_im, res = applied(image, filter, j, i)
         result[i, j, :] = [int(round((res+1) / 2 * 255))]*3 + [255]
@@ -43,12 +44,17 @@ for i in range(h):
         ax2.clear()
         ax1.axis("off")
         ax2.axis("off")
-        ax1.imshow(new_im, cmap="gray", vmin=0, vmax=1)
+        ax1.imshow(image, extent=(0, w, 0, h), cmap="gray", vmin=0, vmax=1)
+        ax1.imshow(filter, extent=(j-dw//2, j+dw//2+1, h-(i-dh//2), h-(i+dh//2+1)), cmap="summer", vmin=-1, vmax=1)
+        ax1.set_ylim([0, h])
+        ax1.set_xlim([0, w])
         ax2.imshow(result)
-        file = f"image{next(counter)}.png"
-        f.savefig(path / file, transparent=True, dpi=300)
-        print(file)
-        files.append(path / file)
+        c = next(counter)
+        if c % 2 == 1:
+            file = f"image{c}.png"
+            f.savefig(path / file, transparent=True, dpi=300)
+            print(file)
+            files.append(path / file)
 
 
 image = PIL.Image.open(files[0]).convert('P')
