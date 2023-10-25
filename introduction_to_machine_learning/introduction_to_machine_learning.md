@@ -10,7 +10,7 @@ Physics is the science of describing the laws of our universe. It is the pioneer
 
 Physics models remained mostly qualitative before Newton. For example, the trajectory of a canonball was approximated with simple geometrical shapes, and there existed Nomograms of the trajectory for several initial angles of the canon.
 
-![Ballistik_Walther_Hermann_Ryff_1517](images/Ballistik_Walther_Hermann_Ryff_1517.png)
+![Ballistik_Walther_Hermann_Ryff_1517](../images/Ballistik_Walther_Hermann_Ryff_1517.png)
 
 The first truely quantitative physical model was introduced with differential calculus by Isaac Newton (1643 - 1727):
 
@@ -22,7 +22,7 @@ This model is a parametric model that take as input the velocity, and gives the 
 The parameters of the model are g the gravity acceleration constant, m the mass of the canonball, C the drag coefficient, and V0 the initial velocity at exit of the muzzle. The parameters of this physical model were determined independently by specially crafted experiments. For example, timing the fall of a marble of neglectible drag gives g. Weighting the canonball gives m. The drag coefficient C for a sphere of same diameter can be measured from the terminal velocity of a sphere made of a lighter material like paper. And finally, measuring the distance traveled by the canonball gives its initial velocity.
 
 
-![canonball_trajectory](images/gif_trajectory/trajectory.gif)
+![canonball_trajectory](../images/gif_trajectory/trajectory.gif)
 
 
 ## Best fitting parameters
@@ -46,7 +46,7 @@ The most commonly used optimization algorithm is the gradient descent algorithm,
 
 The gradient is the vector of derivatives of the loss function with regards to each of the model's parameters. It points in the uphill direction, so we make small displacements in the parameters space, in the direction opposed to the gradient. In practice this displacement is usualy chosen as a factor called learning rate that multiplies minus the gradient. The gradient is function of the parameters and so must be updated at each step.
 
-![gradient_descent](images/gif_gradient_descent/gradient_descent.webp)
+![gradient_descent](../images/gif_gradient_descent/gradient_descent.webp)
 
 In this animation we fit a linear function y=a*x+b to some data points. In the left panel we represent the data points in blue, the fitted curve in green, and the deviation between observation and prediction in red. The loss to minimize is the sum of the squared lengths of the red segments.
 On the right panel, we ploted values of the sum of squared error (the loss) as a function of the parameters a and b. The black dots are the positions in the parameters space. In this two-parameters case, the gradient descent can be viewed as following the slope of a 3D surface and can be visualized.
@@ -62,7 +62,7 @@ Additionaly it is to be noted that this algorithm might not find a solution clos
 Another less often used optimization algorithm is the genetic algorithm optimization (John Holland 1960). It is inspired for the theory of evolution. The vector of all the parameters of the model is assimilated to the genetic code of an individual. The criterion to optimize for is
 a "fitness score" of the individual to its environment that we want to maximize.
 
-![genetic_algorithm](images/gif_genetic/genetic_algorithm.webp)
+![genetic_algorithm](../images/gif_genetic/genetic_algorithm.webp)
 
 We start with a random parameters vector. At each step we create "childs" copies of the previous state, with  the addition of random noise representing the mutations. Only the best fitted child is selected at the end. There exist a lot of variations, some more complex involving keeping the n best fit at each generation, or performing "matings" by mixing the parameter vectors of couples of individuals. Just like in gradient descent algorithm, the scale of the optimal parameters is important (because the amplitude of the random noise is usualy the same for all parameters). Input variables are usually normalized as well.
 
@@ -74,7 +74,7 @@ Thanks to numerical optimization we can fit any parametric model to observations
 
 Beeing able to adjust the expressive power of the model is an advantage. Having too much expressive power can hurt generalization capability of the model. Because the model learns noise specific to the training data sample and not a general trend in the data. This is called overfitting. 
 
-![overfitting with polynomial](images/gif_lagrange_polynome_interpolation/Lagrange_polynomial_interpolation.webp)
+![overfitting with polynomial](../images/gif_lagrange_polynome_interpolation/Lagrange_polynomial_interpolation.webp)
 
 In this animation, a polynomial of increasing order is fited to a set of training data. Another set of data called the test data is put aside an not used during training. The performance of the model can be evaluated on the test data, which is representative of the performance of the model on new data points. As we can see the higher the polynomial's order, the better is the loss on the training data. However, at one point, the model ends up performing worse than before on the test data.
 
@@ -112,11 +112,11 @@ $$
 y = \mathrm{exp}\left( \left(\frac{X_1-0.5}{0.3} \right)^2 + \left(\frac{X_2-0.5}{0.3}\right)^2 \right) - \mathrm{exp}\left( \left(\frac{X_1+0.5}{0.3} \right)^2 + \left(\frac{X_2+0.5}{0.3} \right)^2\right)
 $$
 
-![target function and observations for regression](images/target_function/regression_target.png)
+![target function and observations for regression](../images/target_function/regression_target.png)
 
 And each classification model will be fitted on 500 random samples from each of two gaussian distributions:
 
-![target function and observations for classification](images/target_function/classification_target.png)
+![target function and observations for classification](../images/target_function/classification_target.png)
 
 ### Linear and polynomial regression
 
@@ -124,15 +124,15 @@ Linear models are models of the form y = a1 \* x1 + ... + an \* xn + b.
 This include polynomials of any order if we set xi = x^i. Sometimes interaction terms of the form xi\*xj are also added, as well as any custom numerical feature.
 This kind of models have the advantage to have an analytical solution for the parameters that minimize the sum of squared errors to observations, which means training is orders of magnitude faster than other type of models. Linear models (polynomials of order one) also have the advantage to be simple enough that its parameters can be interpreted. Althought this is always dangerous with correlated inputs as the values of the optimum parameters can be extremly sensitive to noise. For example an increased weight can be compensated by a reduced weight from another highly correlated variable.
 
-![linear and polynomials models](images/linear_regression/linear_regression.png)
+![linear and polynomials models](../images/linear_regression/linear_regression.png)
 
 Polynomials are in theory universal approximators (see Lagrange polynomial interpolation). In practice they generalize poorly to new data, especially with high polynomial orders. And as illustrated below its expressive power scales poorly with polynomial order. Even for a simple 1D function such has the absolute value. For this reason this kind of models are usualy restricted to linear models or low order polynomials. They are used alone to describe low complexity functions, as piecewise linear function or piecewise polynomials for more complex functions (for example NASA polynomials fitted to describe thermodynamic parameters).
 
-![poor fitting with polynomial](images/gif_v_shape_linear_regression/v_shape.webp)
+![poor fitting with polynomial](../images/gif_v_shape_linear_regression/v_shape.webp)
 
 The fitting of our test function gives the following result:
 
-![polynomial regression](images/polynomial/polynomial_regression.png)
+![polynomial regression](../images/polynomial/polynomial_regression.png)
 
 There also exist variations of the linear regression which minimize other loss functions. Ridge regression consists in minimizing the sum of squared error plus a chosen positive factor that multiplies the L2 norm (euclidian norm) of the parameters vector (also called L2 penalization). This tends to reduce the expressiveness of the model by scaling down towards zero all weights and bias equaly. The lasso regression replaces the L2 penalization by L1 penalization (L1 norm of the parameters vector: the sum of their absolute values) which tends to penalize towards zero the weigt of the less impactant variables. And finally the Elastic net variation that cumulates L1 and L2 penalization with two different multiplying factors.
 
@@ -146,21 +146,21 @@ The multiplying factors $\alpha$ and $\beta$ in the loss are hyper parameters th
 
 The k nearest neighbours model was invented in 1951 by Joseph Hodges. It is an interpolation method from labeled observations rather than a parametric model. The Y value of a new observation is given by the average (sometime weighted by inverse distance) of the Y of the k closest labeled observations, with the integer k an hyperparameter of the model (usualy 3 or 5). It is an universal approximator by definition if the obsevations are weighted by inverse distance or if k is 1, because then it predicts without any error all the training observations.
 
-![knn evaluation](images/k_nearest_neighbours/k_nearest_evaluation.png)
+![knn evaluation](../images/k_nearest_neighbours/k_nearest_evaluation.png)
 
 This model has the advantage of beeing easy to interpret, as for a new observation it identifies similar points already labeled. It can be used for regression as well as classification and requires no training.
 The evaluation on test data gives the following results:
 
-![knn regression](images/k_nearest_neighbours/k_nearest_regression.png)
+![knn regression](../images/k_nearest_neighbours/k_nearest_regression.png)
 
-![knn classification](images/k_nearest_neighbours/k_nearest_classification.png)
+![knn classification](../images/k_nearest_neighbours/k_nearest_classification.png)
 
 
 ### Decision tree
 
 Decision tree are models that consist in successive binary splits of the training data using threshold criterion on input variables. The leafs of the obtained tree are associated to a constant prediction value, either a class for classification or a numerical value for regression. For classification, the class predicted at a leaf is the most frequent class amongst training data in this leaf. For regression, the numerical value predicted at a leaf is the average of the target values amongst training data in this leaf. If we make enough splits, there will be only one training observation in each leaf, which proves that this model is an universal approximator. To avoid reaching this state of overfitting, a maximum number of split can be chosen as an hyper-parameter. Sometimes there are additional stoping criteria such as the maximum depth of the tree, and the minimum number of sample in a leaf to allow the split.
 
-![decision tree](images/gif_decision_tree/decision_tree.png)
+![decision tree](../images/gif_decision_tree/decision_tree.png)
 
 During training the tree is expanded step by step by splitting one of the leafs in two at each step. There is a finite number of ways of spliting a set of observations in two groups with a threshold on an input variable (because we only consider thresholds at mid-distance between two distinct consecutive values of the variable). There is a finite number of input variables to split on. Consequently there is a finite number of ways of spliting a leaf of the tree. During training, all possible splits of all leafs are explored and scored. The next split chosen at each step is the split that scores best. This greedy algorithm doesn't ensure that the split are chosen optimaly for the final result, but exploring all possible trees would be prohibitively slow. For regression, the score chosen is usualy the reduction of mean squared error of the model (which simplifies to the difference between initial set variance and the average of variance of the two new sets). For classification, the score is usualy chosen as the reductions of the cross entropy of the model (which simplifies to the difference between cross entropy of the initial set and the sum of the cross entropy of the two new sets).
 
@@ -168,9 +168,9 @@ Decision tree have the advantage of needing no data normalization whatsoever, as
 
 The training on the test data give the following results.
 
-![decision tree regression](images/gif_decision_tree/decision_tree_regression.webp)
+![decision tree regression](../images/gif_decision_tree/decision_tree_regression.webp)
 
-![decision tree classification](images/gif_decision_tree/decision_tree_classification.webp)
+![decision tree classification](../images/gif_decision_tree/decision_tree_classification.webp)
 
 
 ## Gradient boosting
@@ -179,7 +179,7 @@ Gradient boosting was first publicated by Jerome H Friedman in *Greedy Function 
 
 The general idea behind gradient boosting regression is to define a model that is a sum of shallow decision tree regressors. The sequence of decision tree is extended by training a new decision tree with as target the error of the gradient boosting model at the previous step. Thus it gradually corrects its own error on the training data as the number of decision trees grow. The resulting model generalizes better to unseen data than a deep decision tree regressor, while remaining an universal approximator.
 
-![gradient boosting](images/gradient_boosting/gradient_boosting.png)
+![gradient boosting](../images/gradient_boosting/gradient_boosting.png)
 
 In practice a scaling factor between 0 and 1 (usualy 0.1) called learning rate is applied to all decision tree predictions. This factor is an hyperparameter and improves generalization power when tuned correctly. Also the model starts from an initial guess $\hat{y}_0$ chosen as the average $y$ of all training observations to speed up training.
 
@@ -215,15 +215,15 @@ Hence the update rule for each individual regressor $\hat{y}^n_c = y_c^{n-1} + l
 
 The gradient boosting model has all the advantages of the decision tree model excepted for the interpretability. It however usualy performs better. The training of a gradient boosting model on test data gives the following results:
 
-![gradient boosting regression](images/gradient_boosting/gradient_boosting_regression.webp)
+![gradient boosting regression](../images/gradient_boosting/gradient_boosting_regression.webp)
 
-![gradient boosting clasification](images/gradient_boosting/gradient_boosting_classification.webp)
+![gradient boosting clasification](../images/gradient_boosting/gradient_boosting_classification.webp)
 
 ## Feed forward neural network
 
 Feed forward neural networks (also called multi layer perceptron) are a type of neural network that can be used for regression or classification from tabular data, and is usualy trained with gradient descent. It was first publicated by  McCulloch Warren and Walter Pitts in *A Logical Calculus of Ideas Immanent in Nervous Activity* in 1944. It was originaly intended as a simple biologival model of a brain. It is usualy represented in the following form:
 
-![feed forward](images/neural_network/neural_network_explaination.png)
+![feed forward](../images/neural_network/neural_network_explaination.png)
 
 The model is organised in layers. Each circle represents an intermediate numerical value, also called neuron. The blue circles are the input variables. The red circle are the hidden layers' neurons. The green circle is the predicted output. It is possible to have several outputs if several scalars should be predicted at once. For classification for example there is one output neuron per possible target class, and the prediction of the model is the class with the neuron most activated (highest numerical value). The calculations of the neurons' values are done from left to right (hence why it is sometimes called a feed forward neural network). Each neuron is connected to all the neurons of the previous layer by some synapses, indicating that each neuron depend exclusively on all the neurons of the previous layer (hence why it is sometimes called a fully connected neural network). The mathematical expression of a neuron is:
 
@@ -233,11 +233,11 @@ $$
 
 This is essentially a linear function of the neurons of the previous layer, to which an activation function $f$ is applied. With $f$ chosen non linear, otherwise the whole neural network simplifies to a linear model. The activation function is usually the same for the whole network, excepted for the outputs, which usualy have no activation function unless we want to add some specific constraint to them. For example, in classification, the softmax function is applied to the outputs to convert the values between -inf and +inf to probabilities (between 0 and 1, such that the sum of the outputs is 1). The softmax function takes the exponential of each output (to have strictly positive values) and divide them all by the sum of the exponential of all outputs (so that they sum up to 1). Here below are some usual activation functions. From experience, ReLU is always a good default choice.
 
-![activation functions](images/neural_network/activation_functions.png)
+![activation functions](../images/neural_network/activation_functions.png)
 
 Visualizing how a single neuron reacts to modifications of the parameters helps to understand the choice of its mathematical formulation. Let's consider a neuron with two inputs X1 and X2 that we will note $\vec{X}$. The mathematical expression of its output can be equivalently formulated as $y = f\left( (\vec{X} + \vec{b}) \cdot \vec{a}\right)$. If $f$ is the tanh function, the resulting function is a wave in the direction of $\vec{a}$. Modifying the amplitude of $\vec{a}$ changes the slope of the wave. Changing the bias $\vec{b}$ gives a position offset to the wave.
 
-![neuron](images/neural_network/neuron.webp)
+![neuron](../images/neural_network/neuron.webp)
 
 The wave separates the input over the newly constructed $Y$ feature. It is intuitive how successive separations can isolate any point, and thus theat the feed forward neural network is an universal regressor. In a more general manner the universal approximation theorem is a proof that feed forward networks with a single layer can approximates any function given enough neurons and hidden layers.
 
@@ -245,19 +245,19 @@ The feed forward neural networks, like all neural networks, have the advantage o
 
 The fitting of feed forward models with 3 hidden layers of 50 neurons and ReLU activation gives the following results on our test datasets:
 
-![feed forward regression](images/neural_network/feed_forward_regression.webp)
+![feed forward regression](../images/neural_network/feed_forward_regression.webp)
 
-![feed forward regression](images/neural_network/feed_forward_classification.webp)
+![feed forward regression](../images/neural_network/feed_forward_classification.webp)
 
 ## Visualizing model performances
 
 After training a model it can be usefull to visualize the result of the model on test data to give a qualitative estimation of the model performance and to diagnosis when the model didn't train correcly. For regression model it can be usefull to visualize a prediction/target scatter plot. If the model is perfect, all points are on the y=x axis.
 
-![visualize regression](images/model_performance_visualization/fitting.png)
+![visualize regression](../images/model_performance_visualization/fitting.png)
 
 For classification it can be usefull to plot a confusion matrix. The row index indicates the class predicted by the model, and the columns indicates the target classes. If the prediction is perfect 100% of the predictions should be in the diagonal.
 
-![visualize classification](images/model_performance_visualization/confusion_matrix.png)
+![visualize classification](../images/model_performance_visualization/confusion_matrix.png)
 
 For quantitative performance evaluation it is often a good idea to use an intuitive metric in addition to the value of the loss. For regression it is usual to compute an R² metric ($1 - \frac{\sum_i (y_i - \hat{y}_i)^2}{ \textrm{var}(y) }$) or the pair of mean error and standard deviation of error. For classification usual metrics are the accuracy (fraction of good predictions over all observations), the precision (for each target class, number of observations correctly labeled as part of the target class divied by number of observations labeled as part of the target class), the recall (for each target class, number of observations correctly labeled as part of the class divided by number of observations in the target class), and the F1 score ($2\times \frac{\textrm{precision}\times \textrm{recall}}{\textrm{precision} + \textrm{recall}}$).
 
@@ -275,13 +275,13 @@ In real life applications we sometimes have non tabular data we would like to ap
 
 Images for example can be interpreted as tabular data with as many input columns as there are pixels times the number of chanels in the image. However with this approach the model would need to learn independently to recognize the same paterns at eahc position of the image. This would require prohibitively big quantities of training data. For this reason machine learning scientist have been using convolutional filters to extract features from images in a shift invariant manner. Here below an animation taken from [here](https://github.com/vdumoulin/conv_arithmetic) of how convolution of a filter works:
 
-![convolution](images/convolution.gif)
+![convolution](../images/convolution.gif)
 
 The filter is applied on each chanel of the image separately. The value of each pixel of the image chanel and filter are multiplied by each other and summed to give one pixel of the newly obtained feature map. For application to feature extraction, the maximum value of the feature map is selected. This scalar number represents the feature associated to a filter and a chanel of the image.
 
 The filters can be generated from families of filters such as the Gabor filters, and only a subset of the features will effectively be used by the model after feature selection.
 
-![gabor filter](images/filters/gabor.png)
+![gabor filter](../images/filters/gabor.png)
 
 Nowadays specialised convolutional neural networks are the dominant type of model used in this field of application. Because image analysis requires powerfull model, and neural networks scale very well thanks to parallelization on graphical processing units.
 
