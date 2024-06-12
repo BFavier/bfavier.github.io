@@ -1,48 +1,46 @@
 # Introduction to machine learning
 
 Machine learning is often described as having an algorithm "learn" from "data".
-More pragmatically it always consists in adjusting the parameters of a parametric model (for example the weights of a linear regression model) to maximize a numerical criterion representing the model's fitness for its task (for example, minimize the model's sum of squared errors for regression), using an optimization algorithm (gradient descent for example).
-This is essentially the same definition as fitting a statistical model. The term "machine learning" emerged when the advance of computational powers allowed to move from very simple model for which the parameters maximizing the fitness criterion had an analytical solution, to more complex models which required stepwise optimization methods. Hence the learning part of machine learning, as "training" of the model could take a lot of time while the model was becoming increasingly better at it's task.
+More formally it consists in adjusting the parameters of a parametric model (for example the weights of a linear regression model) to maximize a numerical criterion representing the model's fitness for its task (for example, minimize the model's sum of squared errors for regression), using an optimization algorithm (for example gradient descent).
+The term "machine learning" emerged when the advance of computational powers allowed to move from simple models for which the parameters maximizing the fitness criterion had an analytical solution, to more complex models which required stepwise optimization methods. Because the processus is progressive and takes time, it feels like the machine is "learning".
 
-## Physics : a first example of parametric model
+## Physics : from qualitative models to quantitative
 
-Physics is the science of describing the laws of our universe. It is the pioneer discipline that introduced the usage of mathematical parametric models: equations that take inputs, produce outputs, and depend on adjustable parameters.
+Physics is the pioneer discipline that introduced quantitative modeling. It is the science of describing (modeling) the laws of the universe. It started as qualitative descriptions, and became quantitative with the developement of algebra that introduced equation with variables.
 
-Physics models remained mostly qualitative before Newton. For example, the trajectory of a canonball was approximated with simple geometrical shapes, and there existed Nomograms of the trajectory for several initial angles of the canon.
+Aristotle (-384 to -322 BC) wrote "Physics", a text in which he details a model where elements have a 'natural' trajectory, such as smoke that goes up, or a stone that goes down when droped. He further explains why a stone thrown upward will move against it's natural trajectory at first because it is pushed up by the air it displaces. This is obviously very far
+
+In early works on balistic (illustration from 1517), the trajectory of a canonball was approximated with simple geometrical shapes, with a linear initial trajectory due to the theory of *impetus* prevalent at the time. The length of each segment was measured by experimentation for several initial angle and quantity of powder. The results of the experiments gave a table from which one could read the expected trajectory for a given initial condition. This is a quantitative model, although in a form difficult to exploit.
 
 ![Ballistik_Walther_Hermann_Ryff_1517](../images/Ballistik_Walther_Hermann_Ryff_1517.png)
 
-The first truely quantitative physical model was introduced with differential calculus by Isaac Newton (1643 - 1727):
+Later on, Isaac Newton (1643 - 1727) proposed Newton's laws of motion, which gives a mathematical formula for the acceleration of a canonball:
 
 $$
-m \times \frac{\partial \vec{V}}{\partial t} = m \times \vec{g} + C \times \vec{V}^2
+\frac{\partial \vec{V}}{\partial t} = \vec{g} - \frac{C}{m} \times \lVert \vec{V} \rVert \times \vec{V}
 $$
 
-This model is a parametric model that take as input the velocity, and gives the acceleration.
-The parameters of the model are g the gravity acceleration constant, m the mass of the canonball, C the drag coefficient, and V0 the initial velocity at exit of the muzzle. The parameters of this physical model were determined independently by specially crafted experiments. For example, timing the fall of a marble of neglectible drag gives g. Weighting the canonball gives m. The drag coefficient C for a sphere of same diameter can be measured from the terminal velocity of a sphere made of a lighter material like paper. And finally, measuring the distance traveled by the canonball gives its initial velocity.
+This is a quantitative model, in the form of an algebraic equation. It depends on the gravity acceleration constant g, the mass of the canonball m, the drag coefficient C, and the initial velocity and orientation V. It predicts the acceleration, which we can use to compute a trajectory.
 
+## Adjusting parameters to observation
+
+In the previous model, we can think of some of the variables as inputs, and others as parameters. Inputs are variables which are known, and for different values of which we want to evaluate the model: the tilt of the muzzle. Parameters are variables that will be constant in any evaluation of the model: the gravity constant, the drag coefficient, the initial velocity at the exit of the muzzle. To be able to make accurate predictions, we want to find values of the parameters that match well with experiments.
 
 ![canonball_trajectory](../images/gif_trajectory/trajectory.gif)
 
+One way of doing so would be to test several values of the parameters, and find one for which the model results are close to the reality (experimental measurements).
 
-## Best fitting parameters
-
-
-Measuring the value of each parameter independently with specialy crafted experiment is not always possible. Because sometimes parameters cannot be decoupled from each other, or new experiments cannot be freely done. Another alternative is to adjust all the parameters at once to best fit to the observations.
-
-In the previous example, lets assume we have measurements of the trajectory of a canonball. We could adjust the parameters to obtain the best possible fit of the predicted trajectory with the experimentally measured trajectory.
-
-This kind of approach was first publicated by Adrien-Marie Legendre in *Nouvelles méthodes pour la détermination des orbites des comètes* in 1805. He applied this method to find the equation of the conic best describing the trajectory of a comete. For his application, Legendre formalized the "best fit" as the set of parameters which minimizes the sum of square deviations between model and measurement points. The square in this criterion gives an higher weight to big errors, and takes the absolute value of the errors so that they can't compensate each others. This was coined as the least squares method.
+Adrien-Marie Legendre formalised this idea in *Nouvelles méthodes pour la détermination des orbites des comètes* in 1805. He applied this method to find the equation of the conic best describing the trajectory of a comete. For his application, Legendre formalized the "best fit" as the set of parameters which minimizes the sum of square deviations between model and measurement points. The square in this criterion gives an higher weight to big errors, and takes the absolute value of the errors so that they can't compensate each others. This was coined as the least squares method.
 
 For some specific cases, the sum of squared errors admits a single minimum and no maximum. Consequently the zero of its derivative with regards the parameters gives the best fiting set of parameters: the best fit is given by an analytical solution. Legendre notably gave an analytical solution of the optimum parameters (in the least squares sense) for linear model.
 
 ## Numerical optimization
 
-Because it is not always possible analyticaly, optimization algorithms aim at finding numericaly the minimum of a function (often only a local minimum) in as few evaluations as possible. Under the heavy influence of numerical optimization in economics modeling, this function that we want to minimize is called the loss function or sometimes cost function.
+Optimization algorithms aim at finding numericaly the minimum of a function (often only a local minimum) in as few evaluations as possible. Due to the extensive use of numerical optimization in economics modeling, this function that we want to minimize is often called the loss function, or sometimes cost function.
 
 ### Gradient descent algorithm
 
-The most commonly used optimization algorithm is the gradient descent algorithm, first publicated by Augustin-Louis Cauchy in *Compte Rendu à l'Académie des Sciences* in 1847. The loss as a function of other parameters can be seen as an hyper-surface we want to find the minimum of. The idea of the gradient descent is to start from an initial position of random parameters, and follow the slope of the cost function toward a local minimum.
+The most commonly used optimization algorithm is the gradient descent algorithm, first published by Augustin-Louis Cauchy in *Compte Rendu à l'Académie des Sciences* in 1847. The loss as a function of other parameters can be seen as an hyper-surface we want to find the minimum of. The idea of the gradient descent is to start from an initial position of random parameters, and follow the slope of the cost function toward a local minimum.
 
 The gradient is the vector of derivatives of the loss function with regards to each of the model's parameters. It points in the uphill direction, so we make small displacements in the parameters space, in the direction opposed to the gradient. In practice this displacement is usualy chosen as a factor called learning rate that multiplies minus the gradient. The gradient is function of the parameters and so must be updated at each step.
 
@@ -107,10 +105,6 @@ In addition, sometimes some class weighting is added to this loss to counteract 
 In this section we will describe some commonly used machine learning models for application to tabular data.
 
 We will fit each regression model on 1000 noisy observations from the function
-
-$$
-y = \mathrm{exp}\left( \left(\frac{X_1-0.5}{0.3} \right)^2 + \left(\frac{X_2-0.5}{0.3}\right)^2 \right) - \mathrm{exp}\left( \left(\frac{X_1+0.5}{0.3} \right)^2 + \left(\frac{X_2+0.5}{0.3} \right)^2\right)
-$$
 
 ![target function and observations for regression](../images/target_function/regression_target.png)
 
