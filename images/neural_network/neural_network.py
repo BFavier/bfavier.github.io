@@ -237,14 +237,14 @@ class ClassifierModel(Model):
 model = ClassifierModel(3, 50)
 Xobs, Yobs = classification_data()
 Xobs, Yobs = model.x_as_tensor(Xobs), model.y_as_tensor(Yobs)
-X = np.stack(np.meshgrid(np.linspace(-2, 2, 500), np.linspace(-2, 2, 500)), axis=-1)
+X = np.stack(np.meshgrid(np.linspace(-1.3, 1.3, 500), np.linspace(-1.3, 1.3, 500)), axis=-1)
 
 f = plt.figure(figsize=[5, 5])
 ax = f.add_subplot(111)
 
 files = []
-optimizer = torch.optim.Adam(model.parameters(), lr=1.0E-4)
-for i in range(0, 301):
+optimizer = torch.optim.Adam(model.parameters(), lr=1.0E-3)
+for i in range(0, 401):
     if i % 10 == 0:
         ax.clear()
         Y = model.predict(X.reshape(-1, 2)).reshape(X.shape[:2])
@@ -253,10 +253,10 @@ for i in range(0, 301):
         G = np.zeros(Y.shape)
         image = np.stack([R, G, B], axis=-1)
         image = (image * 55 + [[[200, 200, 200]]]).astype("uint8")
-        ax.imshow(image, extent=(-2, 2, -2, 2), origin="lower")
+        ax.imshow(image, extent=(-1.3, 1.3, -1.3, 1.3), origin="lower")
         ax.scatter(Xobs[..., 0], Xobs[..., 1], c=[mpl.cm.Set1.colors[int(i)] for i in Yobs], marker=".")
-        ax.set_xlim([-2, 2])
-        ax.set_ylim([-2, 2])
+        ax.set_xlim([-1.3, 1.3])
+        ax.set_ylim([-1.3, 1.3])
         ax.set_xticks([])
         ax.set_yticks([])
         ax.set_xlabel("X1")

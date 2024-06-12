@@ -79,7 +79,7 @@ f, ax = plt.subplots(figsize=[5, 5])
 Xobs, Yobs = classification_data()
 is_b = Yobs.astype(bool)
 Xa, Xb = Xobs[~is_b], Xobs[is_b]
-X = np.stack(np.meshgrid(np.linspace(-2, 2, 500), np.linspace(-2, 2, 500)), axis=-1)
+X = np.stack(np.meshgrid(np.linspace(-1.3, 1.3, 500), np.linspace(-1.3, 1.3, 500)), axis=-1)
 k = 5
 Y = model(X.reshape(-1, 2), Xobs, Yobs, k=k).reshape(X.shape[:2])
 
@@ -89,10 +89,10 @@ G = np.zeros(Y.shape)
 image = np.stack([R, G, B], axis=-1)
 image = (image * 55 + [[[200, 200, 200]]]).astype("uint8")
 
-ax.imshow(image, extent=(-2, 2, -2, 2), origin="lower")
+ax.imshow(image, extent=(-1.3, 1.3, -1.3, 1.3), origin="lower")
 ax.scatter(Xobs[..., 0], Xobs[..., 1], c=[mpl.cm.Set1.colors[int(i)] for i in Yobs], marker=".")
-ax.set_xlim([-2, 2])
-ax.set_ylim([-2, 2])
+ax.set_xlim([-1.3, 1.3])
+ax.set_ylim([-1.3, 1.3])
 ax.set_xticks([])
 ax.set_yticks([])
 ax.set_xlabel("X1")

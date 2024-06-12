@@ -31,7 +31,7 @@ f.savefig(path / "decision_tree.png", transparent=True, dpi=300)
 # regression
 
 Xobs, Yobs = regression_data()
-X = np.stack(np.meshgrid(np.linspace(-1, 1, 100), np.linspace(-1, 1, 100)), axis=-1)
+X = np.stack(np.meshgrid(np.linspace(-1.3, 1.3, 100), np.linspace(-1.3, 1.3, 100)), axis=-1)
 
 f = plt.figure(figsize=[10, 5])
 ax = f.add_subplot(121, projection="3d")
@@ -89,10 +89,10 @@ for i in range(1, 21):
     image = np.stack([R, G, B], axis=-1)
     image = (image * 55 + [[[200, 200, 200]]]).astype("uint8")
 
-    ax.imshow(image, extent=(-2, 2, -2, 2), origin="lower")
+    ax.imshow(image, extent=(-1.3, 1.3, -1.3, 1.3), origin="lower")
     ax.scatter(Xobs[..., 0], Xobs[..., 1], c=[mpl.cm.Set1.colors[i] for i in Yobs], marker=".")
-    ax.set_xlim([-2, 2])
-    ax.set_ylim([-2, 2])
+    ax.set_xlim([-1.3, 1.3])
+    ax.set_ylim([-1.3, 1.3])
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_xlabel("X1")

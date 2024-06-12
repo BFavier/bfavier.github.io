@@ -17,8 +17,11 @@ def regression_data() -> Tuple[np.ndarray, np.ndarray]:
 
 
 def classification_data() -> Tuple[np.ndarray, np.ndarray]:
-    Xa = np.random.multivariate_normal([-0.5, -0.5], [[0.3, 0.], [0., 0.3]], size=500)
-    Xb = np.random.multivariate_normal([0.5, 0.5], [[0.3, 0.], [0., 0.3]], size=500)
-    Xobs = np.concatenate([Xa, Xb], axis=0)
-    Yobs = np.concatenate([np.zeros(len(Xa), dtype=int), np.ones(len(Xb), dtype=int)])
-    return Xobs, Yobs
+    # Xa = np.random.multivariate_normal([-0.5, -0.5], [[0.3, 0.], [0., 0.3]], size=500)
+    # Xb = np.random.multivariate_normal([0.5, 0.5], [[0.3, 0.], [0., 0.3]], size=500)
+    # Xobs = np.concatenate([Xa, Xb], axis=0)
+    # Yobs = np.concatenate([np.zeros(len(Xa), dtype=int), np.ones(len(Xb), dtype=int)])
+    # return Xobs, Yobs
+    X = np.random.uniform(-1, 1, 1000*2).reshape(1000, 2)
+    Y = (X[:, 1] < 0.8 * np.sin(2*np.pi * X[:, 0])).astype(int)
+    return X, Y
